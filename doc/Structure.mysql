@@ -1,0 +1,11 @@
+
+CREATE TABLE IF NOT EXISTS `entries` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `url` varchar(255) COLLATE utf8_czech_ci NOT NULL COMMENT 'Original url',
+  `code` varchar(64) COLLATE utf8_czech_ci NOT NULL COMMENT 'Code',
+  `created` datetime NOT NULL,
+  `used` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'use counter',
+  `owner` int(10) unsigned DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `url` (`url`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=1 ;

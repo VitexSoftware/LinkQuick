@@ -1,0 +1,57 @@
+/* 
+    Document   : main
+    Created on : Sep 20, 2010, 7:54:25 PM
+    Author     : vitex
+    Description: main css
+*/
+
+
+root { 
+    display: block;
+}
+
+body { background: darkseagreen; }
+
+#result {
+
+    color: #006600 ;
+    font-style: oblique;
+    font-family: 'Courier New',Courier,monospace;
+    font-size: large;
+    background-color: chartreuse;
+    border-right-style: groove;
+    border-left-style: groove;
+    border-bottom-style: groove;
+    border-top-style: groove;
+    margin-right: 5px;
+    margin-left: 5px;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    padding-right: 4px;
+    padding-left: 4px;
+    padding-bottom: 4px;
+    padding-top: 4px;
+}
+
+.small { font-size: small; }
+
+#RegFace {
+    width: 100%;
+}
+
+table {
+    border: 1px solid #285c00;
+}
+
+th {
+    background: #006600;
+    color: #8bd83b;
+}
+
+td {
+    background: #72b42d;
+}
+
+.gravatar_icon {
+    width: 150px;
+}
