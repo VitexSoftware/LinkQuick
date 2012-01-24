@@ -3,7 +3,8 @@
  * Přihlašovací stránka
  * @author Vitex <vitex@hippy.cz>
  * @copyright Vitex@hippy.cz (G) 2009,2011
- * @package LevyBreh
+ * @package LinkQuick
+ * @subpackage Engine
  */
 require_once 'includes/LQInit.php';
 require_once 'classes/LQTwitter.php';
@@ -54,6 +55,7 @@ if (isset($_REQUEST['wipe'])) {
         $_SESSION['access_token'] = $tmhOAuth->extract_params($tmhOAuth->response['response']);
         unset($_SESSION['oauth']);
         header("Location: {$here}");
+        exit;
     } else {
         outputError($tmhOAuth);
     }
@@ -79,6 +81,7 @@ if (isset($_REQUEST['wipe'])) {
         $force = isset($_REQUEST['force']) ? '&force_login=1' : '';
         $authurl = $tmhOAuth->url("oauth/{$method}", '') . "?oauth_token={$_SESSION['oauth']['oauth_token']}{$force}";
         $OPage->Redirect($authurl);
+        exit;
     } else {
         outputError($tmhOAuth);
     }

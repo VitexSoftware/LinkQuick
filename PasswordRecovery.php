@@ -5,7 +5,7 @@
  */
 
 
-require_once 'includes/LBBegin.php';
+require_once 'includes/LQInit.php';
 require_once 'Ease/EaseMail.php';
 require_once 'Ease/EaseHtmlForm.php';
 $Success = false;
@@ -42,7 +42,7 @@ if($EmailTo) {
 }
 
 
-$OPage->AddItem(new LBPageTop('Obnova zapomenutého hesla'));
+$OPage->AddItem(new LQPageTop('Obnova zapomenutého hesla'));
 
 
 
@@ -63,7 +63,7 @@ if(!$Success) {
     $OPage->AddItem(new EaseHtmlATag('Login.php', _('Pokračovat')));
 }
 
-$OPage->AddItem(new LBPageBottom());
+$OPage->AddItem(new LQPageBottom());
 
 $OPage->Draw();
 ?>

@@ -82,9 +82,9 @@ class LQBrickTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @todo Implement testLoadColumnsFromShop().
+     * @todo Implement testLoadColumnsFromMySQL().
      */
-    public function testLoadColumnsFromShop() {
+    public function testLoadColumnsFromMySQL() {
         // Remove the following lines when you implement this test.
         $this->markTestIncomplete(
                 'This test has not been implemented yet.'

@@ -41,13 +41,25 @@ class EaseOAuth extends EaseAtom {
         
     }
 
+    /**
+     * Je již uživatel přihlášen k twitteru ?
+     * @return boolean 
+     */
+    static function IsAuthenticated(){
+        return isset ($_SESSION['access_token']['user_id']);
+    }
+    
+    /**
+     *
+     * @param type $Base
+     * @return EaseJQueryLinkButton 
+     */
     static function AuthButton($Base = ''){
-        if(!isset ($_SESSION['access_token']['user_id'])){
-            return new EaseHtmlATag($Base . '?authenticate=1', new EaseHtmlImgTag('https://si0.twimg.com/images/dev/buttons/sign-in-with-twitter-d.png'));
+        if(!self::IsAuthenticated()){
+            return new EaseJQueryLinkButton($Base.'?authenticate=1', _('přihlásit přez Twitter'));
         } else {
-            return new EaseHtmlATag($Base . '?wipe=1', _('odhlasit twitter'));
+            return new EaseJQueryLinkButton($Base.'?wipe=1', _('odhlasit twitter'));
         }
-        
     }
 
     function __destruct() {
