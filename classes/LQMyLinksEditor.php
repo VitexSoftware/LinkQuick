@@ -51,13 +51,15 @@ class LQMyLinksEditor extends EaseHtmlTableTag {
      * načte položky z databáze a zobrazí je
      */
     function Finalize() {
-        $this->AddRowHeaderColumns(array(_('datum'), _('zkratka'), _('adresa'), _('odstranění')));
+        $this->AddRowHeaderColumns(array(_('zobrazení'),_('od'), _('zkratka'), _('adresa'), _('odstranění')));
         foreach ($this->Entries as $LinkID => $Link) {
             $this->AddRowColumns(array(
+                $Link['used'],
                 self::ShowTime($Link['created']),
                 new EaseHtmlATag('./' . $Link['code'], $Link['code']),
                 new EaseHtmlATag($Link['url'], $Link['url']),
-                new EaseJQueryLinkButton('?DeleteID=' . $Link['id'], _('odstranit'), NULL, array('class' => 'delete'))));
+                new EaseJQueryLinkButton('?DeleteID=' . $Link['id'], _('odstranit'), NULL, array('class' => 'delete')))
+                );
         }
         $this->AddNavigation();
         parent::Finalize();
