@@ -1,4 +1,13 @@
 <?php
+/**
+ * zobrazení a editace přehledu vložených adres
+ * @copyright Vitex Software © 2012
+ * @author Vítězslav Dvořák <vitex@vitexsoftware.cz>
+ * @package LinkQuick
+ * @subpackage WebUI
+ */
+
+require_once 'LQLinkDateTimeSelector.php';
 
 /**
  * Třída zobrazení přehledu vložených adres
@@ -51,13 +60,14 @@ class LQMyLinksEditor extends EaseHtmlTableTag {
      * načte položky z databáze a zobrazí je
      */
     function Finalize() {
-        $this->AddRowHeaderColumns(array(_('zobrazení'),_('od'), _('zkratka'), _('adresa'), _('odstranění')));
+        $this->AddRowHeaderColumns(array(_('zobr.'),_('od'), _('zkratka'), _('adresa'),_('Datum expirace'), _('odstranění')));
         foreach ($this->Entries as $LinkID => $Link) {
             $this->AddRowColumns(array(
                 $Link['used'],
                 self::ShowTime($Link['created']),
                 new EaseHtmlATag('./' . $Link['code'], $Link['code']),
                 new EaseHtmlATag($Link['url'], $Link['url']),
+                new LQLinkDateTimeSelector('ExpireDate',$Link['ExpireDate'],$Link['id']),    
                 new EaseJQueryLinkButton('?DeleteID=' . $Link['id'], _('odstranit'), NULL, array('class' => 'delete')))
                 );
         }

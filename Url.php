@@ -18,12 +18,20 @@ $Url = $Encoder->GetURLByCode();
 if(!$Url){
     header('HTTP/1.0 404 Not Found',404);
     $OPage->AddItem(new LQPageTop(_('LinkQuick: '._('Zkratka nenalezena'))));
-    $OPage->AddItem(new EaseHtmlDivTag('404',_('Zkratka nenalezena')) );
+    $OPage->AddItem(new EaseHtmlDivTag('Sorry',_('Zkratka nenalezena')) );
     $OPage->AddItem(new LQPageBottom());
     $OPage->Draw();
 } else {
-    $Encoder->UpdateCounter();
-    header('Location: '.$Url);
+    if($Encoder->GetDataValue('Expired')){
+        header('HTTP/1.0 410 Expired',410);
+        $OPage->AddItem(new LQPageTop(_('LinkQuick: '._('Zkratka vypršela'))));
+        $OPage->AddItem(new EaseHtmlDivTag('Sorry',_('Zkratka vypršela')) );
+        $OPage->AddItem(new LQPageBottom());
+        $OPage->Draw();
+    } else {
+        $Encoder->UpdateCounter();
+        header('Location: '.$Url);
+    }
 }
 
 ?>

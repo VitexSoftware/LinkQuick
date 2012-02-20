@@ -3,7 +3,7 @@
 /**
  * Třídy pro vykreslení stránky
  * @author Vitex <vitex@hippy.cz>
- * @copyright Vitex@hippy.cz (G) 2009,2010,2011
+ * @copyright Vitex@hippy.cz (G) 2009,2010,2011,2012
  */
 require_once 'Ease/EaseWebPage.php';
 require_once 'Ease/EaseHtmlForm.php';

@@ -83,11 +83,14 @@ class LQEncoder extends EaseBrick {
         } else {
             $InObject = FALSE;
         }
-        $Url = $this->GetColumnsFromMySQL(array('id', 'url'), array('code' => $Code));
+        $Url = $this->GetColumnsFromMySQL(array('id', 'url','ExpireDate','UNIX_TIMESTAMP(ExpireDate) AS Expire'), array('code' => $Code));
         if (isset($Url[0]['url'])) {
             if ($InObject) {
                 $this->SetDataValue('url', $Url[0]['url']);
                 $this->SetDataValue('id', $Url[0]['id']);
+                if((int)$Url[0]['Expire'] < time()){
+                    $this->SetDataValue('Expired', true);
+                }
             }
             return $Url[0]['url'];
         } else {
