@@ -50,7 +50,7 @@ class LQLinkDateTimeSelector extends LQDateTimeSelector {
      */
     function AfterAdd(){
         $this->SetPartProperties(array('onClose'=>'function(dateText, inst) { $.post(\'DataSaver.php\', { SaverClass: \'' . get_class($this) .
-            '\', id: ' . $this->LinkID . ', Field: \'' . $this->InputTag->GetTagProperty('name') . '\', Value: dateText } ) }'));
+            '\', id: ' . $this->LinkID . ', Field: \'' . $this->InputTag->GetTagProperty('Field') . '\', Value: dateText } ) }'));
     }
     
 }

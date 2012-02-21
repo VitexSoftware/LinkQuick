@@ -8,6 +8,7 @@
 require_once 'includes/LQInit.php';
 require_once 'LQEncoder.php';
 require_once 'Ease/EaseMail.php';
+require_once 'classes/LQDateTimeSelector.php';
 
 $Encoder = new LQEncoder();
 
@@ -15,7 +16,8 @@ $OK = $OPage->GetRequestValue('OK');
 $Notify = $OPage->GetRequestValue('Notify');
 if ($OK) {
     $NewURL = $OPage->GetRequestValue('NewURL');
-    if (strlen(trim($NewURL)) && preg_match("/^(?:[;\/?:@&=+$,]|(?:[^\W_]|[-_.!~*\()\[\] ])|(?:%[\da-fA-F]{2}))*$/", $NewURL)) {
+    if (strlen(trim($NewURL)) && preg_match("/^(?:[;\/?:@&=+$,]|(?:[^\W_]|[-_.!~*#\()\[\] ])|(?:%[\da-fA-F]{2}))*$/", $NewURL)) {
+        $Encoder->SetDataValue('ExpireDate',$OPage->GetRequestValue('ExpireDate'));
         $Encoder->SaveUrl($NewURL);
         if ($Encoder->RecordID) {
             $OUser->AddStatusMessage(_('Url uloženo do databáze').': ' . $NewURL, 'success');
@@ -33,12 +35,15 @@ if ($OK) {
 $OPage->AddItem(new LQPageTop(_('LinkQuick: Zkracovač pro vaše URL')));
 $OPage->AddItem(new EaseHtmlImgTag('images/LinkQuick.png', 'LinkQuick', 378, 68));
 
-$AddNewFrame = new EaseHtmlFieldSet(_('Vytvořit novou zkratku'), new EaseHtmlInputTextTag('NewURL',NULL,array('size'=>80)));
+$AddNewFrame = new EaseHtmlFieldSet(_('Vytvořit novou zkratku'), new EaseHtmlInputTextTag('NewURL',$OPage->GetRequestValue('NewURL'),array('size'=>80)));
 
 $MailTo = ''; 
 if($OUser->GetSettingValue('SendMail')){
     $MailTo = $OUser->GetUserEmail();
 }
+
+$AddNewFrame->AddItem(new LQLabeledDateTimeSelector('ExpireDate', $OPage->GetRequestValue('ExpireDate'), _('Datum expirace')));
+     
 
 $AddNewFrame->AddItem(new EaseLabeledTextInput('Notify',$MailTo,_('Odeslat potvrzení mailem na adresu'),$Notify));
 $AddNewFrame->AddItem(new EaseJQuerySubmitButton('OK', 'Ok', 'Ok'));

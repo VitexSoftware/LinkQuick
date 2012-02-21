@@ -67,7 +67,7 @@ class LQMyLinksEditor extends EaseHtmlTableTag {
                 self::ShowTime($Link['created']),
                 new EaseHtmlATag('./' . $Link['code'], $Link['code']),
                 new EaseHtmlATag($Link['url'], $Link['url']),
-                new LQLinkDateTimeSelector('ExpireDate',$Link['ExpireDate'],$Link['id']),    
+                new LQLinkDateTimeSelector('ExpireDate'.$Link['id'],$Link['ExpireDate'],$Link['id'],array('Field'=>'ExpireDate')),    
                 new EaseJQueryLinkButton('?DeleteID=' . $Link['id'], _('odstranit'), NULL, array('class' => 'delete')))
                 );
         }

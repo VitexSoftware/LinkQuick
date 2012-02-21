@@ -56,6 +56,9 @@ class LQDateTimeSelector extends EaseJQueryUIPart {
         $this->InputTag = new EaseHtmlInputTextTag($this->PartName, $this->InitialValue, $this->TagProperties);
         $this->InputTag->SetTagID($this->PartName);
         $this->InputTag = $this->AddItem($this->InputTag);
+        if(strtotime($InitialValue) < time( )){
+            $this->InputTag->SetTagCss(array('background-color'=>'red'));
+        }
     }
 
     function Finalize() {
@@ -64,5 +67,20 @@ class LQDateTimeSelector extends EaseJQueryUIPart {
     }
  
 }
+
+
+/**
+ * Zobrazuje vstup pro heslo s měřičem síly opatřený patřičným popiskem
+ */
+class LQLabeledDateTimeSelector extends EaseLabeledInput {
+
+    /**
+     * Který input opatřit labelem ?
+     * @var string EaseInputClass name 
+     */
+    public $ItemClass = 'LQDateTimeSelector';
+
+}
+
 
 ?>

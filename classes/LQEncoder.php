@@ -121,7 +121,7 @@ class LQEncoder extends EaseBrick {
      */
     public function SaveUrl($OriginalURL) {
         $OriginalURL = $this->MyDbLink->EaseAddSlashes($OriginalURL);
-        $this->MyDbLink->ExeQuery('INSERT INTO entries SET url=\'' . $OriginalURL . '\', created=NOW(),owner='.(int)  $this->EaseShared->User->GetUserID());
+        $this->MyDbLink->ExeQuery('INSERT INTO entries SET url=\'' . $OriginalURL . '\', created=NOW(), ExpireDate = \''.$this->GetDataValue('ExpiryDate').'\', owner='.(int)  $this->EaseShared->User->GetUserID());
         $this->RecordID = $this->MyDbLink->GetInsertID();
         $EncodedURL = self::Encode($this->RecordID);
         $this->MyDbLink->ExeQuery('UPDATE entries SET code=\'' . $EncodedURL . '\' WHERE id=\'' . $this->RecordID . '\'');
