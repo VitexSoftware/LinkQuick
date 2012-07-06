@@ -1,4 +1,5 @@
 <?php
+
 /**
  * zobrazení a editace přehledu vložených adres
  * @copyright Vitex Software © 2012
@@ -6,7 +7,6 @@
  * @package LinkQuick
  * @subpackage WebUI
  */
-
 require_once 'LQLinkDateTimeSelector.php';
 
 /**
@@ -17,7 +17,8 @@ require_once 'LQLinkDateTimeSelector.php';
  * @subpackage Engine
  * @todo Editace
  */
-class LQMyLinksEditor extends EaseHtmlTableTag {
+class LQMyLinksEditor extends EaseHtmlDivTag
+{
 
     /**
      * Pracujeme s tabulkou entries
@@ -43,45 +44,64 @@ class LQMyLinksEditor extends EaseHtmlTableTag {
      */
     public $Pages = 0;
 
-    function AfterAdd() {
-        $this->LoadSqlData();
-    }
-
-    function LoadSqlData() {
+    /**
+     * Načte data z databáze 
+     */
+    function LoadSqlData( $Domain = NULL )
+    {
+        if(is_null($Domain)){
+            $DomFragment = '';
+        } else {
+            $DomFragment = ' `domain` LIKE \''.$Domain.'\' AND ';
+        }
         $PageNo = intval($this->WebPage->GetRequestValue('PageNo'));
-        $Pages = $this->MyDbLink->QueryToArray('SELECT count(*) FROM ' . $this->MyTable . ' WHERE `owner`=' . $this->EaseShared->User->GetUserID());
+        $Pages = $this->MyDbLink->QueryToArray('SELECT count(*) FROM ' . $this->MyTable . ' WHERE deleted=0 AND '.$DomFragment.' `owner`=' . $this->EaseShared->User->GetUserID());
         if (isset($Pages[0])) {
             $this->Pages = ceil(current($Pages[0]) / $this->EntriesPerPage);
         }
-        $this->Entries = $this->MyDbLink->QueryToArray('SELECT * FROM ' . $this->MyTable . ' WHERE `owner`=' . $this->EaseShared->User->GetUserID() . ' LIMIT ' . $this->EntriesPerPage . ' OFFSET ' . $PageNo * $this->EntriesPerPage, 'id');
+        $this->Entries = $this->MyDbLink->QueryToArray('SELECT * FROM ' . $this->MyTable . ' WHERE deleted=0 AND '.$DomFragment.' `owner`=' . $this->EaseShared->User->GetUserID() . ' LIMIT ' . $this->EntriesPerPage . ' OFFSET ' . $PageNo * $this->EntriesPerPage, 'id');
     }
 
     /**
      * načte položky z databáze a zobrazí je
      */
-    function Finalize() {
-        $this->AddRowHeaderColumns(array(_('zobr.'),_('od'), _('zkratka'), _('adresa'),_('Datum expirace'), _('odstranění')));
-        foreach ($this->Entries as $LinkID => $Link) {
-            $this->AddRowColumns(array(
-                $Link['used'],
-                self::ShowTime($Link['created']),
-                new EaseHtmlATag('./' . $Link['code'], $Link['code']),
-                new EaseHtmlATag($Link['url'], $Link['url']),
-                new LQLinkDateTimeSelector('ExpireDate'.$Link['id'],$Link['ExpireDate'],$Link['id'],array('Field'=>'ExpireDate')),    
-                new EaseJQueryLinkButton('?DeleteID=' . $Link['id'], _('odstranit'), NULL, array('class' => 'delete')))
+    function Finalize()
+    {
+        $Domains = LQEncoder::getDomainList();
+        $DomTabs = $this->addItem(new EaseJQueryUITabs('DomTabs'));
+        foreach ($Domains as $Domain) {
+            $this->LoadSqlData($Domain);
+            $TabTable = new EaseHtmlTableTag();
+            $TabTable->AddRowHeaderColumns(array(_('zobr.'), _('od'), _('zkratka'), _('adresa'), _('Datum expirace'), _('odstranění')));
+            foreach ($this->Entries as $LinkID => $Link) {
+                $TabTable->AddRowColumns(array(
+                    $Link['used'],
+                    self::ShowTime($Link['created']),
+                    new EaseHtmlATag( $Link['code'], $Link['code']),
+                    new EaseHtmlATag($Link['url'], $Link['title']),
+                    new LQLinkDateTimeSelector('ExpireDate' . $Link['id'], $Link['ExpireDate'], $Link['id'], array('Field' => 'ExpireDate')),
+                    new EaseJQueryLinkButton('?DeleteID=' . $Link['id'], _('odstranit'), NULL, array('class' => 'delete')))
                 );
+            }
+            $this->AddNavigation($TabTable);
+            $DomTabs->addTab($Domain, $TabTable);
         }
-        $this->AddNavigation();
-        parent::Finalize();
+
     }
 
-    function AddNavigation() {
+    /**
+     * Přidává navigaci do tabulky
+     * 
+     * @param type $Table 
+     */
+    function AddNavigation( & $Table )
+    {
         if ($this->Pages > 1) {
             $Navigator = array();
             for ($i = 1; $i <= $this->Pages; $i++) {
                 $Navigator[] = '<a href="?PageNo=' . ($i - 1) . '">' . $i . '</a>';
             }
-            $this->AddRowColumns(array(1 => implode(' ', $Navigator)), array('colspan' => 4));
+            $Table->AddRowColumns(array(1 => implode(' ', $Navigator)), array('colspan' => 4));
         }
     }
 
@@ -90,7 +110,8 @@ class LQMyLinksEditor extends EaseHtmlTableTag {
      * @param string $Time sql-time
      * @return EaseHtmlSpanTag 
      */
-    static function ShowTime($Time) {
+    static function ShowTime($Time)
+    {
         if (is_null($Time)) {
             return '';
         }
@@ -98,7 +119,8 @@ class LQMyLinksEditor extends EaseHtmlTableTag {
         return new EaseHtmlSpanTag(NULL, strftime('%e.%m. %Y', $Stamp), array('title' => $Time));
     }
 
-    function SetUpUser(&$User, &$TargetObject = NULL) {
+    function SetUpUser(&$User, &$TargetObject = NULL)
+    {
         $this->SetDataValue('owner', $User->GetUserID());
         return parent::SetUpUser($User, $TargetObject);
     }

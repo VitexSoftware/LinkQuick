@@ -30,42 +30,12 @@ if ($Login) {
 }
 
 
-
-$OPage->AddCss('
-#LoginFace {
-    display: inline-block;
-    overflow: auto
-}
-
-#WelcomeHint {
-    width: 400px;
-    float:left;
-}
-
-#Spacer {
-    width: 60px;
-    float:left;
-}
-
-#LoginForm {
-    width: 400px;
-    float:left;
-}
-
-#TwitterAuth {
-    float:right;
-}
-    
-');
-
-
 $OPage->AddItem(new LQPageTop(_('Přihlaš se')));
 
 $LoginFace = new EaseHtmlDivTag('LoginFace');
 
 
-$LoginFace->AddItem(new EaseHtmlDivTag('WelcomeHint', _('<p>Zadejte, prosím, Vaše přihlašovací údaje:</p>')));
-$LoginFace->AddItem(new EaseHtmlDivTag('Spacer', '&nbsp;'));
+$OPage->column1->addItem(new EaseHtmlDivTag('WelcomeHint', _('Zadejte, prosím, Vaše přihlašovací údaje:')));
 
 $LoginForm = $LoginFace->AddItem(new EaseHtmlForm('Login'));
 $LoginForm->SetTagID('LoginForm');
@@ -73,9 +43,9 @@ $LoginForm->AddItem(new EaseLabeledInput('login',NULL,_('Login')));
 $LoginForm->AddItem(new EaseLabeledPasswordInput('password',NULL,_('Heslo')));
 $LoginForm->AddItem(new EaseJQuerySubmitButton('LogIn',_('Přihlášení')));
 
-$OPage->AddItem($LoginFace);
+$OPage->column2->addItem($LoginFace);
 
-$OPage->AddItem(new EaseHtmlDivTag('TwitterAuth', LQTwitter::AuthButton('auth.php')));
+$OPage->column3->addItem(new EaseHtmlDivTag('TwitterAuth', LQTwitter::AuthButton('twauth.php')));
 
 $OPage->AddItem(new LQPageBottom());
 

@@ -1,7 +1,8 @@
 <?php
 /**
  * Přesměrovávač LinkQuick
- * @author Vitex <vitex@hippy.cz>
+ * 
+ * @author    Vitex <vitex@hippy.cz>
  * @copyright Vitex@hippy.cz (G) 2009,2011
  */
 
@@ -22,7 +23,8 @@ if(!$Url){
     $OPage->AddItem(new LQPageBottom());
     $OPage->Draw();
 } else {
-    if($Encoder->GetDataValue('Expired')){
+    $Expired = $Encoder->GetDataValue('Expired');
+    if(strlen($Expired) && ($Expired != '0000-00-00 00:00:00')){
         header('HTTP/1.0 410 Expired',410);
         $OPage->AddItem(new LQPageTop(_('LinkQuick: '._('Zkratka vypršela'))));
         $OPage->AddItem(new EaseHtmlDivTag('Sorry',_('Zkratka vypršela')) );

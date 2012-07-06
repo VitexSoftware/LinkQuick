@@ -14,51 +14,68 @@ $Encoder = new LQEncoder();
 
 $OK = $OPage->GetRequestValue('OK');
 $Notify = $OPage->GetRequestValue('Notify');
+$Domain = $OPage->GetRequestValue('Domain');
+$NewURL = $OPage->GetRequestValue('NewURL');
 if ($OK) {
-    $NewURL = $OPage->GetRequestValue('NewURL');
     if (strlen(trim($NewURL)) && preg_match("/^(?:[;\/?:@&=+$,]|(?:[^\W_]|[-_.!~*#\()\[\] ])|(?:%[\da-fA-F]{2}))*$/", $NewURL)) {
-        $Encoder->SetDataValue('ExpireDate',$OPage->GetRequestValue('ExpireDate'));
-        $Encoder->SaveUrl($NewURL);
-        if ($Encoder->RecordID) {
-            $OUser->AddStatusMessage(_('Url uloženo do databáze').': ' . $NewURL, 'success');
+        $Encoder->SetDataValue('ExpireDate', $OPage->GetRequestValue('ExpireDate'));
+        if ($Encoder->SaveUrl($NewURL,$Domain)) {
+            $OUser->AddStatusMessage(_('Url uloženo do databáze') . ': ' . $NewURL, 'success');
             if ($Notify) {
                 $Mail = new EaseMail($Notify, _('LinkQuick: Zkratka vašeho URL'), $NewURL . "\n = \n" . $Encoder->GetShortCutURL());
                 $Mail->Send();
             }
+            $NewURL = '';
+            $OPage->AddItem( new EaseJQueryDialog('NewUrlSuccess', _('Zkratka byla vytvořena'), $Encoder->getDataValue('title'), 'ui-icon-circle-check', new EaseHtmlATag($Encoder->GetCode(), 'http://' . LQEncoder::getDomain() . $Encoder->GetShortCutURL())));
         }
     } else {
-        $OUser->AddStatusMessage(_('Toto není webová adresa!').': ' . $NewURL, 'warning');
+        $OUser->AddStatusMessage(_('Toto není webová adresa!') . ': ' . $NewURL, 'warning');
     }
 }
 
 //Hlavička stránek
 $OPage->AddItem(new LQPageTop(_('LinkQuick: Zkracovač pro vaše URL')));
-$OPage->AddItem(new EaseHtmlImgTag('images/LinkQuick.png', 'LinkQuick', 378, 68));
 
-$AddNewFrame = new EaseHtmlFieldSet(_('Vytvořit novou zkratku'), new EaseHtmlInputTextTag('NewURL',$OPage->GetRequestValue('NewURL'),array('size'=>80)));
+$Domains = LQEncoder::getDomainList();
 
-$MailTo = ''; 
-if($OUser->GetSettingValue('SendMail')){
-    $MailTo = $OUser->GetUserEmail();
+$ActualDomain = LQEncoder::getDomain();
+
+if(!in_array($ActualDomain, $Domains)){
+    $Domains[] = $ActualDomain;
 }
 
-$AddNewFrame->AddItem(new LQLabeledDateTimeSelector('ExpireDate', $OPage->GetRequestValue('ExpireDate'), _('Datum expirace')));
-     
 
-$AddNewFrame->AddItem(new EaseLabeledTextInput('Notify',$MailTo,_('Odeslat potvrzení mailem na adresu'),$Notify));
-$AddNewFrame->AddItem(new EaseJQuerySubmitButton('OK', 'Ok', 'Ok'));
-$AddNewForm = new EaseHtmlForm('AddNewURL', NULL, NULL, $AddNewFrame);
+$DomainTabs = new EaseJQueryUITabs('DomainTabs');
 
-if ($OK && $Encoder->GetCode()) {
-    $OPage->AddItem( new EaseHtmlDivTag('result', array ( _('Zkratka byla vytvořena'),': ', new EaseHtmlATag ( $Encoder->GetCode() , $Encoder->GetShortCutURL()))));
+
+foreach ($Domains as $Domain) {
+    $NextCode = LQEncoder::getNextCode($Domain);
+
+    $AddNewFrame = new EaseHtmlFieldSet(_('Vytvořit novou zkratku').' '.$Domain);
+
+
+    $AddNewFrame->addItem(new EaseLabeledTextInput('NewURL', $NewURL, _('url, které chceš zkrátit'), array('size' => 80,'style'=>'font-size: 30px; height: 40px; width: 100%;')));
+
+    $MailTo = '';
+    if ($OUser->GetSettingValue('SendMail')) {
+        $MailTo = $OUser->GetUserEmail();
+    }
+
+//    $AddNewFrame->AddItem(new LQLabeledDateTimeSelector('ExpireDate'.  str_replace('/','_',$Domain), $OPage->GetRequestValue('ExpireDate'), _('Datum expirace')));
+
+    $AddNewFrame->addItem(new EaseLabeledTextInput('Notify', $MailTo, _('Odeslat potvrzení mailem na adresu'), $Notify));
+    $AddNewFrame->addItem(new EaseJQuerySubmitButton('OK', 'Ok', 'Ok'));
+    $AddNewFrame->addItem( new EaseHtmlInputHiddenTag('Domain', $Domain) );
+    $AddNewForm = new EaseHtmlForm('AddNewURL'.$Domain, NULL, NULL, $AddNewFrame);
+
+    $DomainTabs->addTab($Domain . $NextCode, $AddNewForm);
 }
 
-$OPage->AddItem($AddNewForm);
-
-$OPage->AddItem(_('Počet adres v databázi').': ' . $Encoder->MyDbLink->GetTableNumRows());
-
-$OPage->AddItem(new LQPageBottom());
+$OPage->addItem($DomainTabs);
 
 
-$OPage->Draw();
+$OPage->addItem(new LQPageBottom());
+
+
+$OPage->draw();
 ?>

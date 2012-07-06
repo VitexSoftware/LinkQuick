@@ -56,6 +56,10 @@ td {
     width: 150px;
 }
 
+.avatar {
+    width: 70px;
+}
+
 #Sorry { font-size: 100px; 
          background: green; 
          color: greenyellow; 
@@ -68,3 +72,15 @@ td {
          -khtml-border-radius: 20px;
          border-radius: 20px;
 }
+
+.home {
+    font-weight: bold;
+}
+
+.home .avatar {
+    height: 19px;
+    width: 19px;
+    margin-right: 10px;
+}
+
+

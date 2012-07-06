@@ -78,8 +78,8 @@ class LQTwitter extends EaseOAuth {
     static public $AuthorizeURL = 'https://api.twitter.com/oauth/authorize';
     static public $AccessTokenURL = 'https://api.twitter.com/oauth/access_token';
     
-    static public $AccessToken = '226774444-aDWQrAa0OW2MPXhRsmoQc5GP6L2Q4l08UL5u6FZo';
-    static public $AccessTokenSecret = 'Nll1vXUVcu0YTlcH9gEuTbXMBPMtnSMmRYQP7JYcc';
+    static public $AccessToken = '226774444-l3SnXQQwGAonNlthwSTKiRGMoPnXQussqoPnhyS6';
+    static public $AccessTokenSecret = 'STc5NdbFKvDEKn3dkxBRkhLUGDmzdFRNrgshhVSqp4';
 
     static public $ConsumerKey = 'sTvSZYSWUo60ZkuCGRvWYg';
     static public $ConsumerSecret = 'qRPR8cOWmYA7r2AtMh7mQPu2PyHSGkpjCPqqTeZ7Taw';

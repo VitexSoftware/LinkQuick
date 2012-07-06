@@ -19,7 +19,7 @@ if($OUser->GetUserID()){
 
 $OPage->AddItem(new LQPageTop(_('Odhlášení')));
 
-$OPage->AddItem(new EaseHtmlDivTag(NULL,_('Děkujeme za vaši přízeň a těšíme se na další návštěvu')));
+$OPage->column2->addItem(new EaseHtmlDivTag(NULL,_('Děkujeme za vaši přízeň a těšíme se na další návštěvu')));
 
 $OPage->AddItem(new LQPageBottom());
 

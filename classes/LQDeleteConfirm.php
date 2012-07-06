@@ -21,16 +21,14 @@ class LQDeleteConfirm extends EaseHtmlDivTag {
     /**
      * Vložení nezbytností pro jQuery
      */
-    function AfterAdd() {
+    function afterAdd() {
         EaseJQueryUIPart::jQueryze($this);
     }
 
     /**
      * Vloží javascript s dialogem potvrzení smazání linku
      */
-    function Finalize() {
-        parent::Finalize();
-
+    function finalize() {
         $this->AddJavaScript('
 	$(function() {
 	        $(\'.delete\').click(function(e){

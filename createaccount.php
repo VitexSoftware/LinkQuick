@@ -129,45 +129,7 @@ if (isset($_POST) && count($_POST)) {
 
 
 $OPage->AddCss('
-#RegFace {
-    display: inline-block;
-    overflow: auto
-}
-
-#WelcomeHint {
-    width: 400px;
-    float:left;
-}
-
-#Spacer {
-    width: 60px;
-    float:left;
-}
-
-#LoginForm {
-    float:left;
-}
-
-#Account {
-    float:left;
-    bacgroud-color: white;
-}
-
-#Personal {
-    float:left;
-    bacgroud-color: white;
-}
-
-#Personal {
-    float:left;
-    bacgroud-color: white;
-}
-
-#Submit {
-    padding: 20px;
-}
-
-input.ui-button { width: 100%; }
+input.ui-button { width: 220px; }
 ');
 
 
@@ -175,8 +137,7 @@ $OPage->AddItem(new LQPageTop(_('Registrace')));
 
 $OPage->AddItem(new EaseHtmlDivTag('WelcomeHint', _('Registrací získáš možnost editovat a mazat své uložené zkratky')));
 
-$RegFace = new EaseHtmlDivTag('RegFace');
-
+$RegFace = $OPage->column2->addItem( new EaseHtmlDivTag('RegFace') );
 
 
 $RegForm = $RegFace->AddItem(new EaseHtmlForm('create_account', 'CreateAccount.php'));
@@ -199,7 +160,6 @@ $RegForm->AddItem(new EaseHtmlDivTag('Account', $Account));
 $RegForm->AddItem(new EaseHtmlDivTag('Personal', $Personal));
 $RegForm->AddItem(new EaseHtmlDivTag('Submit', new EaseJQuerySubmitButton('Register',_('Registrovat'),_('dokončit registraci'),array())));
 
-$OPage->AddItem($RegFace);
 
 if (isset($_POST)) {
     $RegForm->FillUp($_POST);

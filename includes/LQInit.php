@@ -30,7 +30,7 @@ if (!isset($_SESSION['User']) || !is_object($_SESSION['User'])) {
 
 /**
  * Objekt uživatele LQCustomer nebo LQAnonym
- * @var LQUser
+ * @global LQUser
  */
 $OUser = &$_SESSION['User'];
 
@@ -38,7 +38,7 @@ require_once 'LQWebPage.php';
 
 /**
  * Objekt pro práci se stránkou
- * @var LQPage
+ * @global LQPage
  */
 $OPage = new LQWebPage($OUser);
 ?>

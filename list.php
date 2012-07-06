@@ -14,13 +14,14 @@ require_once 'LQDeleteConfirm.php';
 $LinksEditor = new LQMyLinksEditor();
 $LinksEditor->SetUpUser($OUser);
 
-$DeleteID = $OPage->GetRequestValue('DeleteID','int');
+$DeleteID = $OPage->getRequestValue('DeleteID','int');
 if(!is_null($DeleteID)){
-    $LinksEditor->SetMyKey($DeleteID);
-    if($LinksEditor->DeleteFromMySQL()){
-        $OUser->AddStatusMessage(_('zkratka byla odstraněna'),'success');
+    $LinksEditor->setMyKey($DeleteID);
+    $LinksEditor->setDataValue('deleted', 1);
+    if($LinksEditor->updateToMySQL()){
+        $OUser->addStatusMessage(_('zkratka byla odstraněna'),'success');
     } else {
-        $OUser->AddStatusMessage(_('zkratka nebyla odstraněna'),'warning');
+        $OUser->addStatusMessage(_('zkratka nebyla odstraněna'),'warning');
     }
 }
 

@@ -56,7 +56,7 @@ class LQDateTimeSelector extends EaseJQueryUIPart {
         $this->InputTag = new EaseHtmlInputTextTag($this->PartName, $this->InitialValue, $this->TagProperties);
         $this->InputTag->SetTagID($this->PartName);
         $this->InputTag = $this->AddItem($this->InputTag);
-        if(strtotime($InitialValue) < time( )){
+        if($InitialValue &&  (strtotime($InitialValue) < time( ))){
             $this->InputTag->SetTagCss(array('background-color'=>'red'));
         }
     }

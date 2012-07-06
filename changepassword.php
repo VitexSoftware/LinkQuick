@@ -70,17 +70,14 @@ if ($FormOK && isset($_POST)) {
 
     $LoginForm->AddItem(new EaseLabeledPasswordInput('CurrentPassword', NULL, _('Stávající heslo')));
 
-
     $LoginForm->AddItem(new EaseLabeledPasswordStrongInput('password', NULL, _('Nové heslo') . ' *'));
     $LoginForm->AddItem(new EaseLabeledPasswordControlInput('passwordConfirm', NULL, _('potvrzení hesla') . ' *', array('id' => 'confirmation')));
-
-
 
     $LoginForm->AddItem(new EaseJQuerySubmitButton('Ok' , 'Změnit heslo'));
 
     $LoginForm->FillUp($_POST);
 
-    $OPage->AddItem( new EaseHtmlFieldSet(_('změna hesla'), $LoginForm));
+    $OPage->column2->addItem( new EaseHtmlFieldSet(_('změna hesla'), $LoginForm));
 }
 
 $OPage->AddItem(new LQPageBottom());

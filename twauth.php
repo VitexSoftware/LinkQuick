@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Přihlašovací stránka
  * @author Vitex <vitex@hippy.cz>
@@ -17,9 +18,16 @@ $tmhOAuth = new tmhOAuth(array(
             'consumer_secret' => 'qRPR8cOWmYA7r2AtMh7mQPu2PyHSGkpjCPqqTeZ7Taw',
         ));
 
+$tmhOAuth = new tmhOAuth(array(
+            'consumer_key' => LQTwitter::$ConsumerKey,
+            'consumer_secret' => LQTwitter::$ConsumerSecret,
+        ));
+
+
 $here = tmhUtilities::php_self();
 
-function outputError($tmhOAuth) {
+function outputError($tmhOAuth)
+{
     echo 'Error: ' . $tmhOAuth->response['response'] . PHP_EOL;
     tmhUtilities::pr($tmhOAuth);
 }
@@ -37,8 +45,15 @@ if (isset($_REQUEST['wipe'])) {
     $code = $tmhOAuth->request('GET', $tmhOAuth->url('1/account/verify_credentials'));
     if ($code == 200) {
         $resp = json_decode($tmhOAuth->response['response']);
-        $_SESSION['User'] = new LQUser($resp->screen_name,$resp->id);
-        $OPage->Redirect('index.php');
+        EaseShared::user(new LQTwitterUser($resp->id,$resp->screen_name));
+        if (!EaseShared::user()->GetSettingValue('icon')) {
+            EaseShared::user()->SetSettingValue('icon', $resp->profile_image_url);
+            EaseShared::user()->UserLogin = $resp->screen_name;
+            EaseShared::user()->save();
+        }
+        EaseShared::user()->LoginSuccess();
+        EaseShared::webPage()->Redirect('index.php');
+        exit();
     } else {
         outputError($tmhOAuth);
     }
@@ -86,21 +101,20 @@ if (isset($_REQUEST['wipe'])) {
         outputError($tmhOAuth);
     }
 }
-        $OPage->Redirect('index.php');
+$OPage->Redirect('index.php');
 
 
 /*
-<ul>
-    <li><a href="?authenticate=1">Sign in with Twitter</a></li>
-    <li><a href="?authenticate=1&amp;force=1">Sign in with Twitter (force login)</a></li>
-    <li><a href="?authorize=1">Authorize Application (with callback)</a></li>
-    <li><a href="?authorize=1&amp;oob=1">Authorize Application (oob - pincode flow)</a></li>
-    <li><a href="?authorize=1&amp;force_read=1">Authorize Application (with callback) (force read-only permissions)</a></li>
-    <li><a href="?authorize=1&amp;force_write=1">Authorize Application (with callback) (force read-write permissions)</a></li>
-    <li><a href="?authorize=1&amp;force=1">Authorize Application (with callback) (force login)</a></li>
-    <li><a href="?wipe=1">Start Over and delete stored tokens</a></li>
-</ul>
+  <ul>
+  <li><a href="?authenticate=1">Sign in with Twitter</a></li>
+  <li><a href="?authenticate=1&amp;force=1">Sign in with Twitter (force login)</a></li>
+  <li><a href="?authorize=1">Authorize Application (with callback)</a></li>
+  <li><a href="?authorize=1&amp;oob=1">Authorize Application (oob - pincode flow)</a></li>
+  <li><a href="?authorize=1&amp;force_read=1">Authorize Application (with callback) (force read-only permissions)</a></li>
+  <li><a href="?authorize=1&amp;force_write=1">Authorize Application (with callback) (force read-write permissions)</a></li>
+  <li><a href="?authorize=1&amp;force=1">Authorize Application (with callback) (force login)</a></li>
+  <li><a href="?wipe=1">Start Over and delete stored tokens</a></li>
+  </ul>
 
-*/
-
+ */
 ?>

@@ -33,10 +33,12 @@ $SettingsFrame->AddItem( new EaseJQueryLinkButton('ChangePassword.php', _('změn
 
 $SettingsFrame->AddItem( new LQTextInputSaver('email', $OUser->GetUserEmail(), _('emailová adresa'),array('id'=>'UserMail')));
 
+$SettingsFrame->addItem('<br>');
+
 $SettingsFrame->AddItem( new LQSendMailSwitcher('SendMail',_('Odesílat potvrzení o nové zkratce'),$OUser->GetSettingValue('SendMail')) );
 
 
-$OPage->AddItem($SettingsFrame);
+$OPage->column2->addItem($SettingsFrame);
 
 $OPage->AddItem(new LQPageBottom());
 
