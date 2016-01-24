@@ -11,27 +11,27 @@ require_once 'includes/LQInit.php';
 require_once 'LQEncoder.php';
 
 
-$Code = $OPage->GetRequestValue('U');
-$Encoder = new LQEncoder();
-$Encoder->SetCode(strtolower($Code));
+$Code = $oPage->getRequestValue('U');
+$encoder = new Encoder();
+$encoder->setCode(strtolower($Code));
 
-$Url = $Encoder->GetURLByCode();
+$Url = $encoder->getURLByCode();
 if(!$Url){
     header('HTTP/1.0 404 Not Found',404);
-    $OPage->AddItem(new LQPageTop(_('LinkQuick: '._('Zkratka nenalezena'))));
-    $OPage->AddItem(new EaseHtmlDivTag('Sorry',_('Zkratka nenalezena')) );
-    $OPage->AddItem(new LQPageBottom());
-    $OPage->Draw();
+    $oPage->addItem(new LQPageTop(_('LinkQuick: '._('Zkratka nenalezena'))));
+    $oPage->addItem(new \Ease\HtmlDivTag('Sorry',_('Zkratka nenalezena')) );
+    $oPage->addItem(new LQPageBottom());
+    $oPage->Draw();
 } else {
-    $Expired = $Encoder->GetDataValue('Expired');
+    $Expired = $encoder->getDataValue('Expired');
     if(strlen($Expired) && ($Expired != '0000-00-00 00:00:00')){
         header('HTTP/1.0 410 Expired',410);
-        $OPage->AddItem(new LQPageTop(_('LinkQuick: '._('Zkratka vypršela'))));
-        $OPage->AddItem(new EaseHtmlDivTag('Sorry',_('Zkratka vypršela')) );
-        $OPage->AddItem(new LQPageBottom());
-        $OPage->Draw();
+        $oPage->addItem(new LQPageTop(_('LinkQuick: '._('Zkratka vypršela'))));
+        $oPage->addItem(new \Ease\HtmlDivTag('Sorry',_('Zkratka vypršela')) );
+        $oPage->addItem(new LQPageBottom());
+        $oPage->Draw();
     } else {
-        $Encoder->UpdateCounter();
+        $encoder->UpdateCounter();
         header('Location: '.$Url);
     }
 }

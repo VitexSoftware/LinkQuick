@@ -17,7 +17,7 @@ require_once 'LQLinkDateTimeSelector.php';
  * @subpackage Engine
  * @todo Editace
  */
-class LQMyLinksEditor extends EaseHtmlDivTag
+class LQMyLinksEditor extends \Ease\HtmlDivTag
 {
 
     /**
@@ -54,12 +54,12 @@ class LQMyLinksEditor extends EaseHtmlDivTag
         } else {
             $DomFragment = ' `domain` LIKE \''.$Domain.'\' AND ';
         }
-        $PageNo = intval($this->WebPage->GetRequestValue('PageNo'));
-        $Pages = $this->MyDbLink->QueryToArray('SELECT count(*) FROM ' . $this->MyTable . ' WHERE deleted=0 AND '.$DomFragment.' `owner`=' . $this->EaseShared->User->GetUserID());
+        $PageNo = intval($this->webPage->getRequestValue('PageNo'));
+        $Pages = $this->MyDbLink->QueryToArray('SELECT count(*) FROM ' . $this->MyTable . ' WHERE deleted=0 AND '.$DomFragment.' `owner`=' . $this->EaseShared->User->getUserID());
         if (isset($Pages[0])) {
             $this->Pages = ceil(current($Pages[0]) / $this->EntriesPerPage);
         }
-        $this->Entries = $this->MyDbLink->QueryToArray('SELECT * FROM ' . $this->MyTable . ' WHERE deleted=0 AND '.$DomFragment.' `owner`=' . $this->EaseShared->User->GetUserID() . ' LIMIT ' . $this->EntriesPerPage . ' OFFSET ' . $PageNo * $this->EntriesPerPage, 'id');
+        $this->Entries = $this->MyDbLink->QueryToArray('SELECT * FROM ' . $this->MyTable . ' WHERE deleted=0 AND '.$DomFragment.' `owner`=' . $this->EaseShared->User->getUserID() . ' LIMIT ' . $this->EntriesPerPage . ' OFFSET ' . $PageNo * $this->EntriesPerPage, 'id');
     }
 
     /**
@@ -67,23 +67,23 @@ class LQMyLinksEditor extends EaseHtmlDivTag
      */
     function Finalize()
     {
-        $Domains = LQEncoder::getDomainList();
+        $Domains = Encoder::getDomainList();
         $DomTabs = $this->addItem(new EaseJQueryUITabs('DomTabs'));
         foreach ($Domains as $Domain) {
             $this->LoadSqlData($Domain);
-            $TabTable = new EaseHtmlTableTag();
-            $TabTable->AddRowHeaderColumns(array(_('zobr.'), _('od'), _('zkratka'), _('adresa'), _('Datum expirace'), _('odstranění')));
+            $TabTable = new \Ease\HtmlTableTag();
+            $TabTable->addRowHeaderColumns(array(_('zobr.'), _('od'), _('zkratka'), _('adresa'), _('Datum expirace'), _('odstranění')));
             foreach ($this->Entries as $LinkID => $Link) {
-                $TabTable->AddRowColumns(array(
+                $TabTable->addRowColumns(array(
                     $Link['used'],
                     self::ShowTime($Link['created']),
-                    new EaseHtmlATag( $Link['code'], $Link['code']),
-                    new EaseHtmlATag($Link['url'], $Link['title']),
+                    new \Ease\HtmlATag( $Link['code'], $Link['code']),
+                    new \Ease\HtmlATag($Link['url'], $Link['title']),
                     new LQLinkDateTimeSelector('ExpireDate' . $Link['id'], $Link['ExpireDate'], $Link['id'], array('Field' => 'ExpireDate')),
                     new EaseJQueryLinkButton('?DeleteID=' . $Link['id'], _('odstranit'), NULL, array('class' => 'delete')))
                 );
             }
-            $this->AddNavigation($TabTable);
+            $this->addNavigation($TabTable);
             $DomTabs->addTab($Domain, $TabTable);
         }
 
@@ -101,14 +101,14 @@ class LQMyLinksEditor extends EaseHtmlDivTag
             for ($i = 1; $i <= $this->Pages; $i++) {
                 $Navigator[] = '<a href="?PageNo=' . ($i - 1) . '">' . $i . '</a>';
             }
-            $Table->AddRowColumns(array(1 => implode(' ', $Navigator)), array('colspan' => 4));
+            $Table->addRowColumns(array(1 => implode(' ', $Navigator)), array('colspan' => 4));
         }
     }
 
     /**
      * Zobrazuje datum v národním tvaru
      * @param string $Time sql-time
-     * @return EaseHtmlSpanTag 
+     * @return \Ease\HtmlSpanTag 
      */
     static function ShowTime($Time)
     {
@@ -116,12 +116,12 @@ class LQMyLinksEditor extends EaseHtmlDivTag
             return '';
         }
         $Stamp = strtotime($Time);
-        return new EaseHtmlSpanTag(NULL, strftime('%e.%m. %Y', $Stamp), array('title' => $Time));
+        return new \Ease\HtmlSpanTag(NULL, strftime('%e.%m. %Y', $Stamp), array('title' => $Time));
     }
 
     function SetUpUser(&$User, &$TargetObject = NULL)
     {
-        $this->SetDataValue('owner', $User->GetUserID());
+        $this->setDataValue('owner', $User->getUserID());
         return parent::SetUpUser($User, $TargetObject);
     }
 

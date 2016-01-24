@@ -7,7 +7,7 @@
  * @package LinkQuick
  * @subpackage WEBUI
  */
-class LQDeleteConfirm extends EaseHtmlDivTag {
+class LQDeleteConfirm extends \Ease\HtmlDivTag {
 
     /**
      * Dialog potvrzení mazání položky 
@@ -15,7 +15,7 @@ class LQDeleteConfirm extends EaseHtmlDivTag {
      */
     function __construct($DialogID) {
         parent::__construct($DialogID, NULL, array('title' => _('žádost o potvrzení')));
-        $this->SetTagCss(array('visibility' => 'hidden'));
+        $this->setTagCss(array('visibility' => 'hidden'));
     }
 
     /**
@@ -29,13 +29,13 @@ class LQDeleteConfirm extends EaseHtmlDivTag {
      * Vloží javascript s dialogem potvrzení smazání linku
      */
     function finalize() {
-        $this->AddJavaScript('
+        $this->addJavaScript('
 	$(function() {
 	        $(\'.delete\').click(function(e){
 	            e.preventDefault();
-                    $("#' . $this->GetTagID() . '").css("visibility",("visible"));   
+                    $("#' . $this->getTagID() . '").css("visibility",("visible"));   
                     var targetUrl = $(this).attr("href");
-                    $("#' . $this->GetTagID() . '").dialog({
+                    $("#' . $this->getTagID() . '").dialog({
  			resizable: false,
                         autoOpen: false,
 			modal: true,
@@ -49,11 +49,11 @@ class LQDeleteConfirm extends EaseHtmlDivTag {
                         }
                 });
 
-                $( \'#' . $this->GetTagID() . '\' ).dialog( \'open\' );
+                $( \'#' . $this->getTagID() . '\' ).dialog( \'open\' );
         });
 });', NULL, TRUE);
 
-        $this->AddItem('<p>
+        $this->addItem('<p>
         <span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>
         <div>' . _('Opravdu nevratně smazat ?') . '</div>
         </p>');

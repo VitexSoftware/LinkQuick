@@ -1,11 +1,38 @@
-
 CREATE TABLE IF NOT EXISTS `entries` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `domain` varchar(25) COLLATE utf8_czech_ci NOT NULL COMMENT 'doména zkratky',
   `url` varchar(255) COLLATE utf8_czech_ci NOT NULL COMMENT 'Original url',
+  `title` varchar(255) COLLATE utf8_czech_ci NOT NULL COMMENT 'Titulek stránky',
   `code` varchar(64) COLLATE utf8_czech_ci NOT NULL COMMENT 'Code',
+  `Countdown` int(11) NOT NULL COMMENT 'Kolikrát link zobrazit ?',
+  `ExpireDate` datetime DEFAULT NULL COMMENT 'Konec platnosti.',
+  `ExpiryAction` enum('stop','free') COLLATE utf8_czech_ci NOT NULL COMMENT 'po dosažení limitu zobrazení zastavit nebo uvolnit',
   `created` datetime NOT NULL,
+  `deleted` tinyint(1) NOT NULL COMMENT 'je záznam považován za smazaný ?',
   `used` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'use counter',
   `owner` int(10) unsigned DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `url` (`url`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=1 ;
+  KEY `url` (`url`),
+  KEY `ExpireDate` (`ExpireDate`),
+  KEY `deleted` (`deleted`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=30 ;
+
+CREATE TABLE IF NOT EXISTS `users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `twitter_id` int(10) unsigned DEFAULT NULL COMMENT 'ID twitteru',
+  `facebook_id` int(10) unsigned DEFAULT NULL COMMENT 'ID facebooku',
+  `settings` longtext COLLATE utf8_czech_ci COMMENT 'Serializovana uzivatelska nastaveni',
+  `email` varchar(128) COLLATE utf8_czech_ci NOT NULL COMMENT 'Email',
+  `firstname` varchar(32) COLLATE utf8_czech_ci DEFAULT NULL,
+  `lastname` varchar(32) COLLATE utf8_czech_ci DEFAULT NULL,
+  `password` varchar(40) COLLATE utf8_czech_ci NOT NULL,
+  `login` varchar(32) COLLATE utf8_czech_ci NOT NULL COMMENT 'Login uzivatele',
+  `parent` int(10) unsigned DEFAULT NULL COMMENT 'predek klienta',
+  `partner` varchar(32) COLLATE utf8_czech_ci DEFAULT NULL COMMENT 'Kód partnera: ats apod.',
+  `DatCreate` datetime NOT NULL COMMENT 'Vytvření uživatele',
+  `DatSave` datetime DEFAULT NULL COMMENT 'poslední modifikace uživatele',
+  `last_modifier_id` int(10) unsigned DEFAULT NULL COMMENT 'id toho kdo záznam naposledy modifikoval',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `customers_username` (`login`),
+  UNIQUE KEY `twitter_id` (`twitter_id`,`facebook_id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;

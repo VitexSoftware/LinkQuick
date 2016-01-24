@@ -42,15 +42,15 @@ class LQLinkDateTimeSelector extends LQDateTimeSelector {
     function __construct($PartName, $InitialValue, $LinkID,  $TagProperties = NULL) {
         $this->LinkID = $LinkID;
         parent::__construct($PartName, $InitialValue, $TagProperties);
-        $this->InputTag->SetTagProperties(array('size'=>15));
+        $this->InputTag->setTagProperties(array('size'=>15));
     }
 
     /**
      * Ukládání do DB
      */
     function AfterAdd(){
-        $this->SetPartProperties(array('onClose'=>'function(dateText, inst) { $.post(\'DataSaver.php\', { SaverClass: \'' . get_class($this) .
-            '\', id: ' . $this->LinkID . ', Field: \'' . $this->InputTag->GetTagProperty('Field') . '\', Value: dateText } ) }'));
+        $this->setPartProperties(array('onClose'=>'function(dateText, inst) { $.post(\'DataSaver.php\', { SaverClass: \'' . get_class($this) .
+            '\', id: ' . $this->LinkID . ', Field: \'' . $this->InputTag->getTagProperty('Field') . '\', Value: dateText } ) }'));
     }
     
 }

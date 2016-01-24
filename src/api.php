@@ -7,10 +7,10 @@
 require_once 'includes/LQInit.php';
 require_once 'classes/LQEncoder.php';
 
-$Encoder = new LQEncoder();
+$encoder = new Encoder();
 
 $server = new SoapServer(null, array('uri' => EasePage::phpSelf()));
-$server->setObject($Encoder);
+$server->setObject($encoder);
 $server->handle();
 
 

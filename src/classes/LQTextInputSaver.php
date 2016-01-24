@@ -6,7 +6,7 @@
  * @author Vitex <vitex@hippy.cz>
  * @package LinkQuick
  * @subpackage WEBUI
- */require_once 'Ease/EaseHtmlForm.php';
+ */require_once 'Ease/\Ease\HtmlForm.php';
 
 /**
  * Ukláda data z imputu přímo do databáze
@@ -43,8 +43,8 @@ class LQTextInputSaver extends EaseLabeledTextInput {
      */
     function Finalize() {
         parent::Finalize();
-        $this->EnclosedElement->SetTagProperties(array('OnChange' => '$.post(\'DataSaver.php\', { SaverClass: \'' . get_class($this) . '\', Field: \'' . $this->EnclosedElement->GetTagProperty('name') . '\', Value: this.value } )'));
-//        $this->EnclosedElement->SetTagProperties(array('OnChange' => '$.ajax( { type: \"POST\", url: \"DataSaver.php\", data: \"SaverClass=' . get_class($this) . '&amp;Field=' . $this->EnclosedElement->GetTagProperty('name') . '&amp;Value=\" + this.value , async: false, success : function() { alert (this); }, statusCode: { 404: function() { alert(\'page not found\');} } }); '));
+        $this->EnclosedElement->setTagProperties(array('OnChange' => '$.post(\'DataSaver.php\', { SaverClass: \'' . get_class($this) . '\', Field: \'' . $this->EnclosedElement->getTagProperty('name') . '\', Value: this.value } )'));
+//        $this->EnclosedElement->setTagProperties(array('OnChange' => '$.ajax( { type: \"POST\", url: \"DataSaver.php\", data: \"SaverClass=' . get_class($this) . '&amp;Field=' . $this->EnclosedElement->getTagProperty('name') . '&amp;Value=\" + this.value , async: false, success : function() { alert (this); }, statusCode: { 404: function() { alert(\'page not found\');} } }); '));
     }
 
     /**
@@ -56,7 +56,7 @@ class LQTextInputSaver extends EaseLabeledTextInput {
      */
     function SaveToMySQL($Data = NULL, $SearchForID = false) {
         if (is_null($Data)) {
-            $Data = $this->GetData();
+            $Data = $this->getData();
         }
         $SaveResult = parent::SaveToMySQL($Data, $SearchForID);
         if (is_null($SaveResult)) {
@@ -74,9 +74,9 @@ class LQTextInputSaver extends EaseLabeledTextInput {
      */
     function CreateMissingColumns($Data = NULL) {
         if (is_null($Data)) {
-            $this->GetData();
+            $this->getData();
         }
-        unset($Data[$this->GetMyKeyColumn()]);
+        unset($Data[$this->getMyKeyColumn()]);
         $KeyName = current(array_keys($Data));
         return EaseDbMySqli::CreateMissingColumns($this, array($KeyName => str_repeat(' ', 1000)));
     }
@@ -88,7 +88,7 @@ class LQTextInputSaver extends EaseLabeledTextInput {
      * @return boolen 
      */
     function SetUpUser(&$User, &$TargetObject = NULL) {
-        $this->SetMyKey($User->GetUserID());
+        $this->setMyKey($User->getUserID());
         return parent::SetUpUser($User, $TargetObject);
     }
     

@@ -1,0 +1,86 @@
+
+/* 
+    Created on : 14.12.2015, 20:37:11
+    Author     : Vítězslav Dvořák <vitezslavdvorak@netspot.cz>
+    Description: main css
+*/
+
+@media (min-width: 1200px) {
+  .container {
+    width: auto;
+  }
+}
+
+.navbar {
+    opacity: 0.9;
+    filter: alpha(opacity=90);
+    -moz-opacity: 0.9;
+    -khtml-opacity: 0.9;
+}
+
+.avatar { width: 100px; }
+
+.required { border: #f5ad66 1px solid; }
+label.error { float: none; color: red; padding-left: .5em; vertical-align: top; }
+div.error span { color: #d14; font-size: large; }
+
+fieldset { border: 1px solid #333333; margin: 10px; padding: 10px; display: inline-block; }
+legend {  border: 1px solid #333333; margin: 2px; padding: 2px; }
+
+#StatusMessages.well .alert {
+    margin: 2px;
+    padding: 2px;
+}
+
+#StatusMessages.well {
+    overflow-y: scroll;
+    max-height: 500px;
+}
+
+#StatusMessages {
+    margin: 2px;
+    padding: 2px;
+}
+#result {
+
+    color: #006600 ;
+    font-style: oblique;
+    font-family: 'Courier New',Courier,monospace;
+    font-size: large;
+    background-color: chartreuse;
+    border-right-style: groove;
+    border-left-style: groove;
+    border-bottom-style: groove;
+    border-top-style: groove;
+    margin-right: 5px;
+    margin-left: 5px;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    padding-right: 4px;
+    padding-left: 4px;
+    padding-bottom: 4px;
+    padding-top: 4px;
+}
+
+fieldset,legend { font-size: medium; line-height: normal; border-radius: 6px; padding-left: 6px;padding-right: 6px; width: auto; }
+
+a img.avatar { height: 30px; width: 30px;}
+
+#FootAbout { text-align: end; vertical-align: bottom; }
+
+.dropdown-menu img { height: 14px; }
+
+#preload { position: absolute; top: 40%; z-index: 20; top: 40%; left: 40%; visibility: hidden; }
+#listing { margin: 20px;}
+
+#smdrag { height: 8px; 
+          background-image:  url( ../images/slidehandle.png ); 
+          background-color: #ccc; 
+          background-repeat: no-repeat; 
+          background-position: top center; 
+          cursor: ns-resize;
+
+}
+
+
+#smdrag:hover { background-color: #f5ad66; }

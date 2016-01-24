@@ -38,7 +38,7 @@ class LQDateTimeSelector extends EaseJQueryUIPart {
         'timeFormat' => 'hh:mm:ss');
     /**
      * Text Input
-     * @var EaseHtmlInputTextTag 
+     * @var \Ease\HtmlInputTextTag 
      */
     public $InputTag = NULL;
 
@@ -49,20 +49,20 @@ class LQDateTimeSelector extends EaseJQueryUIPart {
     function __construct($PartName, $InitialValue = NULL, $TagProperties = NULL) {
         $this->TagProperties = $TagProperties;
         $this->InitialValue = $InitialValue;
-        $this->SetPartName($PartName);
+        $this->setPartName($PartName);
         parent::__construct();
-        $this->EaseShared->WebPage->IncludeJavaScript('js/jquery-ui-timepicker-addon.js', 3);
-        $this->EaseShared->WebPage->IncludeCss('css/jquery-ui-timepicker-addon.css');
-        $this->InputTag = new EaseHtmlInputTextTag($this->PartName, $this->InitialValue, $this->TagProperties);
-        $this->InputTag->SetTagID($this->PartName);
-        $this->InputTag = $this->AddItem($this->InputTag);
+        $this->EaseShared->webPage->IncludeJavaScript('js/jquery-ui-timepicker-addon.js', 3);
+        $this->EaseShared->webPage->IncludeCss('css/jquery-ui-timepicker-addon.css');
+        $this->InputTag = new \Ease\HtmlInputTextTag($this->PartName, $this->InitialValue, $this->TagProperties);
+        $this->InputTag->setTagID($this->PartName);
+        $this->InputTag = $this->addItem($this->InputTag);
         if($InitialValue &&  (strtotime($InitialValue) < time( ))){
-            $this->InputTag->SetTagCss(array('background-color'=>'red'));
+            $this->InputTag->setTagCss(array('background-color'=>'red'));
         }
     }
 
     function Finalize() {
-        $this->EaseShared->WebPage->AddJavaScript('$(function() { $( "#' . $this->PartName . '" ).datetimepicker( { ' . $this->GetPartPropertiesToString() . ' });});', 10);
+        $this->EaseShared->webPage->addJavaScript('$(function() { $( "#' . $this->PartName . '" ).datetimepicker( { ' . $this->getPartPropertiesToString() . ' });});', 10);
         parent::Finalize();
     }
  

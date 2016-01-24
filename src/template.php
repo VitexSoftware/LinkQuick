@@ -17,23 +17,23 @@ require_once 'includes/LQInit.php';
 //Pouze pro přihlášené
 //$OPage->OnlyForLogged();
 
-$LQUser->AddStatusMessage('Vzorová stránka administrace');
-$LQUser->AddStatusMessage('Úspěch','success');
-$LQUser->AddStatusMessage('Varování','warning');
-$LQUser->AddStatusMessage('Chyba','error');
+$LQUser->addStatusMessage('Vzorová stránka administrace');
+$LQUser->addStatusMessage('Úspěch','success');
+$LQUser->addStatusMessage('Varování','warning');
+$LQUser->addStatusMessage('Chyba','error');
 
 
 //Hlavička stránek
-$OPage->AddItem(new LQPageTop('Template Page Title'));
+$oPage->addItem(new LQPageTop('Template Page Title'));
 
 //Skinovný jakoby button link
-$OPage->AddItem(new LQLinkButton('/admin/', 'Vstup do administrace'));
+$oPage->addItem(new LQLinkButton('/admin/', 'Vstup do administrace'));
 
 
 //Vložení konce stránky (aktuálně obsahuje i hlavní menu)
-$OPage->AddItem(new LQPageBottom());
+$oPage->addItem(new LQPageBottom());
 
 //Vyrendrování stránky
-$OPage->Draw();
+$oPage->Draw();
 
 ?>

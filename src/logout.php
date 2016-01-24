@@ -10,20 +10,20 @@ require_once 'includes/LQInit.php';
 
 unset($_SESSION['access_token']); //Twitter OAuth 
 
-if($OUser->GetUserID()){
-    $OUser->Logout();
-    $MessagesBackup = $OUser->GetStatusMessages(TRUE);
-    $OUser = new EaseAnonym();
-    $OUser->AddStatusMessages($MessagesBackup);
+if($oUser->getUserID()){
+    $oUser->Logout();
+    $MessagesBackup = $oUser->getStatusMessages(TRUE);
+    $oUser = new EaseAnonym();
+    $oUser->addStatusMessages($MessagesBackup);
 }
 
-$OPage->AddItem(new LQPageTop(_('Odhlášení')));
+$oPage->addItem(new LQPageTop(_('Odhlášení')));
 
-$OPage->column2->addItem(new EaseHtmlDivTag(NULL,_('Děkujeme za vaši přízeň a těšíme se na další návštěvu')));
+$oPage->column2->addItem(new \Ease\HtmlDivTag(NULL,_('Děkujeme za vaši přízeň a těšíme se na další návštěvu')));
 
-$OPage->AddItem(new LQPageBottom());
+$oPage->addItem(new LQPageBottom());
 
-$OPage->Draw();
+$oPage->Draw();
 
 
 ?>

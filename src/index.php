@@ -1,81 +1,85 @@
 <?php
 
 /**
- * LinkQuick - vložení nové adresy do databáze
- * @author Vitex <vitex@hippy.cz>
- * @copyright Vitex@hippy.cz (G) 2009,2011
+ * LinkQuick - Enter new addrese into database
+ *
+ * @package    LinkQuick
+ * @subpackage LQ
+ * @author     Vitex <vitex@hippy.cz>
+ * @copyright  2009-2016 info@vitexsoftware.cz (G)
  */
+
+namespace LQ;
+
 require_once 'includes/LQInit.php';
-require_once 'LQEncoder.php';
-require_once 'Ease/EaseMail.php';
-require_once 'classes/LQDateTimeSelector.php';
 
-$Encoder = new LQEncoder();
 
-$OK = $OPage->GetRequestValue('OK');
-$Notify = $OPage->GetRequestValue('Notify');
-$Domain = $OPage->GetRequestValue('Domain');
-$NewURL = $OPage->GetRequestValue('NewURL');
-if ($OK) {
-    if (strlen(trim($NewURL)) && preg_match("/^(?:[;\/?:@&=+$,]|(?:[^\W_]|[-_.!~*#\()\[\] ])|(?:%[\da-fA-F]{2}))*$/", $NewURL)) {
-        $Encoder->SetDataValue('ExpireDate', $OPage->GetRequestValue('ExpireDate'));
-        if ($Encoder->SaveUrl($NewURL,$Domain)) {
-            $OUser->AddStatusMessage(_('Url uloženo do databáze') . ': ' . $NewURL, 'success');
-            if ($Notify) {
-                $Mail = new EaseMail($Notify, _('LinkQuick: Zkratka vašeho URL'), $NewURL . "\n = \n" . $Encoder->GetShortCutURL());
-                $Mail->Send();
+$encoder = new Encoder();
+
+$ok = $oPage->getRequestValue('OK');
+$notify = $oPage->getRequestValue('Notify');
+$domain = $oPage->getRequestValue('Domain');
+$newURL = $oPage->getRequestValue('NewURL');
+if ($ok) {
+    if (strlen(trim($newURL)) && preg_match("/^(?:[;\/?:@&=+$,]|(?:[^\W_]|[-_.!~*#\()\[\] ])|(?:%[\da-fA-F]{2}))*$/", $newURL)) {
+        $encoder->setDataValue('ExpireDate', $oPage->getRequestValue('ExpireDate'));
+        if ($encoder->saveUrl($newURL, $domain)) {
+            $oUser->addStatusMessage(_('Url was saved') . ': ' . $newURL, 'success');
+            if ($notify) {
+                $mail = new EaseMail($notify, _('LinkQuick: You URL Shortcut'), $newURL . "\n = \n" . $encoder->getShortCutURL());
+                $mail->send();
             }
-            $NewURL = '';
-            $OPage->AddItem( new EaseJQueryDialog('NewUrlSuccess', _('Zkratka byla vytvořena'), $Encoder->getDataValue('title'), 'ui-icon-circle-check', new EaseHtmlATag($Encoder->GetCode(), 'http://' . LQEncoder::getDomain() . $Encoder->GetShortCutURL())));
+            $newURL = '';
+            $oPage->addItem(new EaseJQueryDialog('NewUrlSuccess', _('Zkratka byla vytvořena'), $encoder->getDataValue('title'), 'ui-icon-circle-check', new \Ease\HtmlATag($encoder->getCode(), 'http://' . LQEncoder::getDomain() . $encoder->getShortCutURL())));
         }
     } else {
-        $OUser->AddStatusMessage(_('Toto není webová adresa!') . ': ' . $NewURL, 'warning');
+        $oUser->addStatusMessage(_('This is not an web address!') . ': ' . $newURL, 'warning');
     }
 }
 
 //Hlavička stránek
-$OPage->AddItem(new LQPageTop(_('LinkQuick: Zkracovač pro vaše URL')));
+$oPage->addItem(new PageTop(_('LinkQuick: Your URL shortener')));
 
-$Domains = LQEncoder::getDomainList();
+$domains = Encoder::getDomainList();
 
-$ActualDomain = LQEncoder::getDomain();
+$actualDomain = Encoder::getDomain();
 
-if(!in_array($ActualDomain, $Domains)){
-    $Domains[] = $ActualDomain;
+if (!in_array($actualDomain, $domains)) {
+    $domains[] = $actualDomain;
 }
 
 
-$DomainTabs = new EaseJQueryUITabs('DomainTabs');
+$domainTabs = new \Ease\TWB\Tabs('DomainTabs');
 
 
-foreach ($Domains as $Domain) {
-    $NextCode = LQEncoder::getNextCode($Domain);
+foreach ($domains as $domain) {
+    $nextCode = Encoder::getNextCode($domain);
 
-    $AddNewFrame = new EaseHtmlFieldSet(_('Vytvořit novou zkratku').' '.$Domain);
+    $addNewForm = new \Ease\TWB\Form('AddNewURL' . $domain);
+    $addNewForm->addInput(new \Ease\Html\InputTextTag('NewURL', $newURL, array('size' => 80, 'style' => 'font-size: 30px; height: 40px; width: 100%;')), _('URL to short')
+    );
 
-
-    $AddNewFrame->addItem(new EaseLabeledTextInput('NewURL', $NewURL, _('url, které chceš zkrátit'), array('size' => 80,'style'=>'font-size: 30px; height: 40px; width: 100%;')));
-
-    $MailTo = '';
-    if ($OUser->GetSettingValue('SendMail')) {
-        $MailTo = $OUser->GetUserEmail();
+    $mailTo = '';
+    if ($oUser->getSettingValue('SendMail')) {
+        $mailTo = $oUser->getUserEmail();
     }
 
-//    $AddNewFrame->AddItem(new LQLabeledDateTimeSelector('ExpireDate'.  str_replace('/','_',$Domain), $OPage->GetRequestValue('ExpireDate'), _('Datum expirace')));
+//    $AddNewFrame->addItem(new LQLabeledDateTimeSelector('ExpireDate'.  str_replace('/','_',$Domain), $OPage->getRequestValue('ExpireDate'), _('Datum expirace')));
 
-    $AddNewFrame->addItem(new EaseLabeledTextInput('Notify', $MailTo, _('Odeslat potvrzení mailem na adresu'), $Notify));
-    $AddNewFrame->addItem(new EaseJQuerySubmitButton('OK', 'Ok', 'Ok'));
-    $AddNewFrame->addItem( new EaseHtmlInputHiddenTag('Domain', $Domain) );
-    $AddNewForm = new EaseHtmlForm('AddNewURL'.$Domain, NULL, NULL, $AddNewFrame);
+    $addNewForm->addInput(new \Ease\Html\InputTextTag('Notify', $mailTo), _('Send email confirmation to'),$notify);
+    $addNewForm->addItem(new \Ease\TWB\SubmitButton(_('OK')));
+    $addNewForm->addItem(new \Ease\Html\InputHiddenTag('Domain', $domain));
 
-    $DomainTabs->addTab($Domain . $NextCode, $AddNewForm);
+    $addNewFrame = new \Ease\TWB\Panel(_('New shortcut') . ' ' . $domain, 'success', $addNewForm);
+
+    $domainTabs->addTab($domain . $nextCode, $addNewFrame);
 }
 
-$OPage->addItem($DomainTabs);
+$oPage->container->addItem($domainTabs);
 
 
-$OPage->addItem(new LQPageBottom());
+$oPage->addItem(new PageBottom());
 
 
-$OPage->draw();
-?>
+$oPage->draw();
+

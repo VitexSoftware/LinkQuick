@@ -14,7 +14,7 @@ require_once 'Ease/EaseJQueryWidgets.php';
  *
  * @author vitex
  */
-class LQSendMailSwitcher extends EaseHtmlCheckBoxTag {
+class LQSendMailSwitcher extends \Ease\HtmlCheckBoxTag {
 
     /**
      * Popisek zobrazený za prvkem
@@ -33,7 +33,7 @@ class LQSendMailSwitcher extends EaseHtmlCheckBoxTag {
     function __construct($Name, $Caption, $Checked = false, $Value = NULL, $Properties = NULL) {
         $this->Caption = $Caption;
         parent::__construct($Name, $Checked, $Value, $Properties);
-        $this->SetTagID($Name);
+        $this->setTagID($Name);
     }
 
     /**
@@ -41,8 +41,8 @@ class LQSendMailSwitcher extends EaseHtmlCheckBoxTag {
      */
     function AfterAdd() {
         $this->IncludeJavaScript('jquery.js', 0, TRUE);
-//        $this->ParentObject->AddItem(new EaseHtmlSpanTag(NULL, $this->Caption, array('OnClick' => '$(\'#' . $this->GetTagName() . '\').click()', 'class' => 'caption'))); //TODO: Checkbox posila opacnou hodnotu nez label
-        $this->AddLabel($this->Caption);
+//        $this->ParentObject->addItem(new \Ease\HtmlSpanTag(NULL, $this->Caption, array('OnClick' => '$(\'#' . $this->getTagName() . '\').click()', 'class' => 'caption'))); //TODO: Checkbox posila opacnou hodnotu nez label
+        $this->addLabel($this->Caption);
     }
 
     /**
@@ -50,18 +50,18 @@ class LQSendMailSwitcher extends EaseHtmlCheckBoxTag {
      * @param string $Label 
      */
     function AddLabel($Label = NULL) {
-        $ForID = $this->GetTagID();
+        $ForID = $this->getTagID();
         if (is_null($Label)) {
             $Label = $ForID;
         }
-        $this->ParentObject->AddItem('<label for="' . $ForID . '">' . $Label . '</label>');
+        $this->ParentObject->addItem('<label for="' . $ForID . '">' . $Label . '</label>');
     }
 
     /**
      * Přidává script pro uložení hodnoty po kliknutí do DB
      */
     function Finalize() {
-        $this->SetTagProperties(array('OnClick' => '$.post(\'DataSaver.php\', { SaverClass: \'' . get_class($this) . '\', Field: \'' . $this->GetTagName() . '\', Value: $(this).is(\':checked\') } );'));
+        $this->setTagProperties(array('OnClick' => '$.post(\'DataSaver.php\', { SaverClass: \'' . get_class($this) . '\', Field: \'' . $this->getTagName() . '\', Value: $(this).is(\':checked\') } );'));
         parent::Finalize();
     }
 
@@ -72,15 +72,15 @@ class LQSendMailSwitcher extends EaseHtmlCheckBoxTag {
      */
     function SaveToMySQL($Data = NULL, $SearchForID = false) {
         if (is_null($Data)) {
-            $Data = $this->GetData();
+            $Data = $this->getData();
         }
-        if ($Data[$this->GetTagName()] == 'true') {
+        if ($Data[$this->getTagName()] == 'true') {
             $Settings['SendMail'] = 1;
         } else {
             $Settings['SendMail'] = 0;
         }
-        $this->User->SetSettings($Settings);
-        return $this->User->SaveToMySQL();
+        $this->User->setSettings($Settings);
+        return $this->User->saveToMySQL();
     }
 
 }

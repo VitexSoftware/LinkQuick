@@ -10,44 +10,44 @@ require_once 'includes/LQInit.php';
 require_once 'Ease/EaseJQueryWidgets.php';
 require_once 'classes/LQTwitter.php';
 
-if (!is_object($OUser)) {
+if (!is_object($oUser)) {
     die(_('Cookies jsou vyžadovány'));
 }
 
-$Login = $OPage->GetRequestValue('login');
+$Login = $oPage->getRequestValue('login');
 
 if ($Login) {
     $_SESSION['User'] = new LQUser();
-    if ($OUser->TryToLogin($_POST)) {
-        $NextUrl = $OPage->GetRequestValue('NextUrl');
+    if ($oUser->TryToLogin($_POST)) {
+        $NextUrl = $oPage->getRequestValue('NextUrl');
         if (($NextUrl != 'LogOff.php') && !is_null($NextUrl)) {
-            $OPage->Redirect($NextUrl);
+            $oPage->Redirect($NextUrl);
         } else {
-            $OPage->Redirect('index.php');
+            $oPage->Redirect('index.php');
         }
         exit;
     }
 }
 
 
-$OPage->AddItem(new LQPageTop(_('Přihlaš se')));
+$oPage->addItem(new LQPageTop(_('Přihlaš se')));
 
-$LoginFace = new EaseHtmlDivTag('LoginFace');
+$LoginFace = new \Ease\HtmlDivTag('LoginFace');
 
 
-$OPage->column1->addItem(new EaseHtmlDivTag('WelcomeHint', _('Zadejte, prosím, Vaše přihlašovací údaje:')));
+$oPage->column1->addItem(new \Ease\HtmlDivTag('WelcomeHint', _('Zadejte, prosím, Vaše přihlašovací údaje:')));
 
-$LoginForm = $LoginFace->AddItem(new EaseHtmlForm('Login'));
-$LoginForm->SetTagID('LoginForm');
-$LoginForm->AddItem(new EaseLabeledInput('login',NULL,_('Login')));
-$LoginForm->AddItem(new EaseLabeledPasswordInput('password',NULL,_('Heslo')));
-$LoginForm->AddItem(new EaseJQuerySubmitButton('LogIn',_('Přihlášení')));
+$LoginForm = $LoginFace->addItem(new \Ease\HtmlForm('Login'));
+$LoginForm->setTagID('LoginForm');
+$LoginForm->addItem(new EaseLabeledInput('login',NULL,_('Login')));
+$LoginForm->addItem(new EaseLabeledPasswordInput('password',NULL,_('Heslo')));
+$LoginForm->addItem(new EaseJQuerySubmitButton('LogIn',_('Přihlášení')));
 
-$OPage->column2->addItem($LoginFace);
+$oPage->column2->addItem($LoginFace);
 
-$OPage->column3->addItem(new EaseHtmlDivTag('TwitterAuth', LQTwitter::AuthButton('twauth.php')));
+$oPage->column3->addItem(new \Ease\HtmlDivTag('TwitterAuth', LQTwitter::AuthButton('twauth.php')));
 
-$OPage->AddItem(new LQPageBottom());
+$oPage->addItem(new LQPageBottom());
 
-$OPage->Draw();
+$oPage->Draw();
 ?>

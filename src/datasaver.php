@@ -6,13 +6,13 @@
  */
 require_once 'includes/LQInit.php';
 
-$OPage->OnlyForLogged();
+$oPage->OnlyForLogged();
 
-if (!$OUser->GetUserID()) {
+if (!$oUser->getUserID()) {
     die(_('nejprve se prosím přihlaš'));
 }
 
-$SaverClass = $OPage->GetRequestValue('SaverClass');
+$SaverClass = $oPage->getRequestValue('SaverClass');
 if (!$SaverClass) {
     $SaverClass = 'LBSaver';
 }
@@ -21,32 +21,32 @@ if (!$SaverClass) {
 if (file_exists('classes/' . $SaverClass . '.php')) {
     require_once 'classes/' . $SaverClass . '.php';
 } else {
-    $OUser->AddStatusMessage(_('Načítání souboru: classes/' . $SaverClass . '.php'), 'warning');
+    $oUser->addStatusMessage(_('Načítání souboru: classes/' . $SaverClass . '.php'), 'warning');
 }
 
-$Field = $OPage->GetRequestValue('Field');
-$Value = $OPage->GetRequestValue('Value');
+$Field = $oPage->getRequestValue('Field');
+$Value = $oPage->getRequestValue('Value');
 
 if (is_null($SaverClass) || is_null($Field) || is_null($Value)) {
     die(_('Chybné volání'));
 }
 
 $Saver = new $SaverClass($Field);
-$Saver->SetUpUser($OUser);
-$Saver->SetDataValue($Field, $Value);
-$keyColumn = $Saver->GetMyKeyColumn();
+$Saver->setUpUser($oUser);
+$Saver->setDataValue($Field, $Value);
+$keyColumn = $Saver->getMyKeyColumn();
 if ($keyColumn) {
-    $Key = $OPage->GetRequestValue($keyColumn);
+    $Key = $oPage->getRequestValue($keyColumn);
     if ($Key) {
-        $Saver->SetMyKey($Key);
+        $Saver->setMyKey($Key);
     }
 }
 
-if (is_null($Saver->SaveToMySql())) {
+if (is_null($Saver->saveToMySql())) {
     header('HTTP/1.0 501 Not Implemented', 501);
-    $OUser->AddStatusMessage(_('Chyba ukládání do databáze: ') . ' ' . $Saver->MyDbLink->ErrorText . ': ' .
+    $oUser->addStatusMessage(_('Chyba ukládání do databáze: ') . ' ' . $Saver->MyDbLink->ErrorText . ': ' .
             _('Třída') . ': <strong>' . $SaverClass . '</strong> ' .
-            _('Tabulka') . ': <strong>' . $Saver->MyTable . '</strong> ' .
+            _('Tabulka') . ': <strong>' . $Saver->myTable . '</strong> ' .
             _('Pole') . ': <strong>' . $Field . '</strong> ' .
             _('Hodnota') . ': <strong>' . $Value . '</strong> <tt>' . $Saver->MyDbLink->LastQuery . '</tt>', 'error');
 } else {

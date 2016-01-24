@@ -9,9 +9,9 @@ require_once 'includes/LQInit.php';
 require_once 'LQSendMailSwitcher.php';
 require_once 'LQTextInputSaver.php';
 
-$OPage->AddItem(new LQPageTop(_('LinkQuick: Profil uživatele').' '.$OUser->GetUserLogin()));
+$oPage->addItem(new LQPageTop(_('LinkQuick: Profil uživatele').' '.$oUser->getUserLogin()));
 
-$OPage->AddJavaScript('
+$oPage->addJavaScript('
 function get_gravatar(email, size) {
     // MD5 (Message-Digest Algorithm) by WebToolkit
     // http://www.webtoolkit.info/javascript-md5.html
@@ -25,23 +25,23 @@ $(\'#UserMail\').change( function(){
 );
 ',NULL, TRUE);
 
-$SettingsFrame = new EaseHtmlFieldSet(_('nastavení'));
-$SettingsFrame->AddItem($OUser);
+$SettingsFrame = new \Ease\HtmlFieldSet(_('nastavení'));
+$SettingsFrame->addItem($oUser);
 
-$SettingsFrame->AddItem( new LQTextInputSaver('login', $OUser->GetUserLogin(), _('přihlašovací jméno')));
-$SettingsFrame->AddItem( new EaseJQueryLinkButton('ChangePassword.php', _('změna hesla')));
+$SettingsFrame->addItem( new LQTextInputSaver('login', $oUser->getUserLogin(), _('přihlašovací jméno')));
+$SettingsFrame->addItem( new EaseJQueryLinkButton('ChangePassword.php', _('změna hesla')));
 
-$SettingsFrame->AddItem( new LQTextInputSaver('email', $OUser->GetUserEmail(), _('emailová adresa'),array('id'=>'UserMail')));
+$SettingsFrame->addItem( new LQTextInputSaver('email', $oUser->getUserEmail(), _('emailová adresa'),array('id'=>'UserMail')));
 
 $SettingsFrame->addItem('<br>');
 
-$SettingsFrame->AddItem( new LQSendMailSwitcher('SendMail',_('Odesílat potvrzení o nové zkratce'),$OUser->GetSettingValue('SendMail')) );
+$SettingsFrame->addItem( new LQSendMailSwitcher('SendMail',_('Odesílat potvrzení o nové zkratce'),$oUser->getSettingValue('SendMail')) );
 
 
-$OPage->column2->addItem($SettingsFrame);
+$oPage->column2->addItem($SettingsFrame);
 
-$OPage->AddItem(new LQPageBottom());
+$oPage->addItem(new LQPageBottom());
 
 
-$OPage->Draw();
+$oPage->Draw();
 ?>

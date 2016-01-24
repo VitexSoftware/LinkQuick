@@ -35,7 +35,7 @@ function outputError($tmhOAuth)
 // reset request?
 if (isset($_REQUEST['wipe'])) {
     unset($_SESSION['access_token']);
-    $OPage->Redirect('LogOut.php');
+    $oPage->Redirect('LogOut.php');
 
 // already got some credentials stored?
 } elseif (isset($_SESSION['access_token'])) {
@@ -46,8 +46,8 @@ if (isset($_REQUEST['wipe'])) {
     if ($code == 200) {
         $resp = json_decode($tmhOAuth->response['response']);
         EaseShared::user(new LQTwitterUser($resp->id,$resp->screen_name));
-        if (!EaseShared::user()->GetSettingValue('icon')) {
-            EaseShared::user()->SetSettingValue('icon', $resp->profile_image_url);
+        if (!EaseShared::user()->getSettingValue('icon')) {
+            EaseShared::user()->setSettingValue('icon', $resp->profile_image_url);
             EaseShared::user()->UserLogin = $resp->screen_name;
             EaseShared::user()->save();
         }
@@ -95,13 +95,13 @@ if (isset($_REQUEST['wipe'])) {
         $method = isset($_REQUEST['authenticate']) ? 'authenticate' : 'authorize';
         $force = isset($_REQUEST['force']) ? '&force_login=1' : '';
         $authurl = $tmhOAuth->url("oauth/{$method}", '') . "?oauth_token={$_SESSION['oauth']['oauth_token']}{$force}";
-        $OPage->Redirect($authurl);
+        $oPage->Redirect($authurl);
         exit;
     } else {
         outputError($tmhOAuth);
     }
 }
-$OPage->Redirect('index.php');
+$oPage->Redirect('index.php');
 
 
 /*
