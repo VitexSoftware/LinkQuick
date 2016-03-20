@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Dialog volby data a času pro editaci linku
  * @copyright Vitex Software © 2012
@@ -15,44 +14,48 @@ require_once 'LQDateTimeSelector.php';
  * @subpackage WebUi
  * @author vitex
  */
-class LQLinkDateTimeSelector extends LQDateTimeSelector {
+class LQLinkDateTimeSelector extends LQDateTimeSelector
+{
     /**
      * Klíčujem dle id
-     * @var string 
+     * @var string
      */
-    public $MyKey = 'id';
+    public $MyKey   = 'id';
+
     /**
-     * Pracujeme s tabulkou entries
-     * @var string 
+     * Pracujeme s tabulkou entry
+     * @var string
      */
-    public $MyTable = 'entries';
+    public $MyTable = 'entry';
+
     /**
      * Pracujem se záznamem č.
-     * @var int 
+     * @var int
      */
-    public $LinkID = NULL;
-    
+    public $LinkID  = NULL;
+
     /**
      * Ajaxový editor datumu a času
      * @param string $PartName
      * @param date $InitialValue
      * @param int $LinkID
-     * @param array $TagProperties 
+     * @param array $TagProperties
      */
-    function __construct($PartName, $InitialValue, $LinkID,  $TagProperties = NULL) {
+    function __construct($PartName, $InitialValue, $LinkID,
+                         $TagProperties = NULL)
+    {
         $this->LinkID = $LinkID;
         parent::__construct($PartName, $InitialValue, $TagProperties);
-        $this->InputTag->setTagProperties(array('size'=>15));
+        $this->InputTag->setTagProperties(['size' => 15]);
     }
 
     /**
      * Ukládání do DB
      */
-    function AfterAdd(){
-        $this->setPartProperties(array('onClose'=>'function(dateText, inst) { $.post(\'DataSaver.php\', { SaverClass: \'' . get_class($this) .
-            '\', id: ' . $this->LinkID . ', Field: \'' . $this->InputTag->getTagProperty('Field') . '\', Value: dateText } ) }'));
+    function AfterAdd()
+    {
+        $this->setPartProperties(['onClose' => 'function(dateText, inst) { $.post(\'DataSaver.php\', { SaverClass: \''.get_class($this).
+            '\', id: '.$this->LinkID.', Field: \''.$this->InputTag->getTagProperty('Field').'\', Value: dateText } ) }']);
     }
-    
 }
-
 ?>

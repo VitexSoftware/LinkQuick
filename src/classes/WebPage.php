@@ -4,42 +4,43 @@ namespace LQ;
 
 /**
  * Custom Twitter Bootstrap based webpage class
- * 
+ *
  * @author Vitex <vitex@hippy.cz>
  * @copyright Vitex@hippy.cz (G) 2009,2010,2011,2012,2016
  */
-class WebPage extends \Ease\TWB\WebPage {
-
+class WebPage extends \Ease\TWB\WebPage
+{
     /**
      * Page main continer
-     * @var TWB\Contaner 
+     * @var TWB\Contaner
      */
     public $container = NULL;
 
     /**
-     * First column 
-     * @var TWB\Col 
+     * First column
+     * @var TWB\Col
      */
     public $column1 = NULL;
 
     /**
      * Second column
-     * @var TWB\Col 
+     * @var TWB\Col
      */
     public $column2 = NULL;
 
     /**
      * Third column
-     * @var TWB\Col 
+     * @var TWB\Col
      */
     public $column3 = NULL;
 
     /**
      * Basic Custom Twitter Bootstrap based webpage class
-     * 
+     *
      * @param string $pageTitle
      */
-    function __construct($pageTitle = null) {
+    function __construct($pageTitle = null)
+    {
         parent::__construct($pageTitle);
         $this->includeCss('css/main.css');
         $this->head->addItem('<link rel="apple-touch-icon-precomposed" href="images/LinkQuickTwitterLogo.png">');
@@ -53,7 +54,8 @@ class WebPage extends \Ease\TWB\WebPage {
 
         $this->container = $this->addItem(new \Ease\TWB\Container);
 
-        $this->heroUnit = $this->container->addItem(new \Ease\Html\Div(null, array('class' => 'hero-unit')));
+        $this->heroUnit = $this->container->addItem(new \Ease\Html\Div(null,
+            ['class' => 'hero-unit']));
 
         $row = $this->container->addItem(new \Ease\TWB\Row);
 
@@ -61,5 +63,4 @@ class WebPage extends \Ease\TWB\WebPage {
         $this->column2 = $row->addColumn(4);
         $this->column3 = $row->addColumn(4);
     }
-
 }

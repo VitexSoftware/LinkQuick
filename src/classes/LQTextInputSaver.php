@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Ukládání hodnot z políčka ajaxem
  * @copyright Vitex Software © 2011
@@ -11,20 +10,19 @@
 /**
  * Ukláda data z imputu přímo do databáze
  */
-class LQTextInputSaver extends EaseLabeledTextInput {
-
+class LQTextInputSaver extends EaseLabeledTextInput
+{
     /**
      * Pracujeme s tabulkou mains
-     * @var string 
+     * @var string
      */
     public $MyTable = 'users';
-    
+
     /**
      * Sloupeček pro poslední modifikaci
-     * @var type 
+     * @var type
      */
     public $MyLastModifiedColumn = 'DatSave';
-
 
     /**
      * Input pro editaci položek uživatele
@@ -32,29 +30,32 @@ class LQTextInputSaver extends EaseLabeledTextInput {
      * @param mixed $Value
      * @param string $Label
      * @param int $UserID
-     * @param array $Properties 
+     * @param array $Properties
      */
-    function __construct($Name, $Value = NULL, $Label = NULL, $Properties = NULL) {
+    function __construct($Name, $Value = NULL, $Label = NULL, $Properties = NULL)
+    {
         parent::__construct($Name, $Value, $Label, $Properties);
     }
 
     /**
      * Přidá odesílací javascript
      */
-    function Finalize() {
+    function Finalize()
+    {
         parent::Finalize();
-        $this->EnclosedElement->setTagProperties(array('OnChange' => '$.post(\'DataSaver.php\', { SaverClass: \'' . get_class($this) . '\', Field: \'' . $this->EnclosedElement->getTagProperty('name') . '\', Value: this.value } )'));
+        $this->EnclosedElement->setTagProperties(['OnChange' => '$.post(\'DataSaver.php\', { SaverClass: \''.get_class($this).'\', Field: \''.$this->EnclosedElement->getTagProperty('name').'\', Value: this.value } )']);
 //        $this->EnclosedElement->setTagProperties(array('OnChange' => '$.ajax( { type: \"POST\", url: \"DataSaver.php\", data: \"SaverClass=' . get_class($this) . '&amp;Field=' . $this->EnclosedElement->getTagProperty('name') . '&amp;Value=\" + this.value , async: false, success : function() { alert (this); }, statusCode: { 404: function() { alert(\'page not found\');} } }); '));
     }
 
     /**
-     * Uloží data, pokud se to nepovede, pokusí se vytvořit chybějící sloupečky 
+     * Uloží data, pokud se to nepovede, pokusí se vytvořit chybějící sloupečky
      * a vrátí vysledek dalšího uložení
      * @param array $Data
      * @param boolean $SearchForID
-     * @return int 
+     * @return int
      */
-    function SaveToMySQL($Data = NULL, $SearchForID = false) {
+    function SaveToMySQL($Data = NULL, $SearchForID = false)
+    {
         if (is_null($Data)) {
             $Data = $this->getData();
         }
@@ -70,28 +71,29 @@ class LQTextInputSaver extends EaseLabeledTextInput {
     /**
      * Vytvoří v databázi sloupeček pro uložení hodnoty widgetu
      * @param array $Data
-     * @return int 
+     * @return int
      */
-    function CreateMissingColumns($Data = NULL) {
+    function CreateMissingColumns($Data = NULL)
+    {
         if (is_null($Data)) {
             $this->getData();
         }
         unset($Data[$this->getMyKeyColumn()]);
         $KeyName = current(array_keys($Data));
-        return EaseDbMySqli::CreateMissingColumns($this, array($KeyName => str_repeat(' ', 1000)));
+        return EaseDbMySqli::CreateMissingColumns($this,
+                [$KeyName => str_repeat(' ', 1000)]);
     }
 
     /**
      * Přiřadí objektu uživatele a nastaví DB
      * @param EaseUser $User
      * @param object|mixed $TargetObject
-     * @return boolen 
+     * @return boolen
      */
-    function SetUpUser(&$User, &$TargetObject = NULL) {
+    function SetUpUser(&$User, &$TargetObject = NULL)
+    {
         $this->setMyKey($User->getUserID());
         return parent::SetUpUser($User, $TargetObject);
     }
-    
 }
-
 ?>

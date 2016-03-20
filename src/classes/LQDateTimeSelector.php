@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Dialog volby data a času
  * @copyright Vitex Software © 2011
@@ -16,71 +15,75 @@ require_once 'Ease/EaseJQuery.php';
  * @package SIWA
  * @author vitex
  */
-class LQDateTimeSelector extends EaseJQueryUIPart {
-
+class LQDateTimeSelector extends EaseJQueryUIPart
+{
     /**
      * Propetries pass to Input
-     * @var array 
+     * @var array
      */
-    public $TagProperties = NULL;
+    public $TagProperties  = NULL;
+
     /**
      * Initial datetime
-     * @var string 
+     * @var string
      */
-    public $InitialValue = NULL;
+    public $InitialValue   = NULL;
+
     /**
      * Datetime Picker parameters
-     * @var array 
+     * @var array
      */
-    public $PartProperties = array(
+    public $PartProperties = [
         'dateFormat' => 'yy-mm-dd',
         'showSecond' => true,
-        'timeFormat' => 'hh:mm:ss');
+        'timeFormat' => 'hh:mm:ss'];
+
     /**
      * Text Input
-     * @var \Ease\HtmlInputTextTag 
+     * @var \Ease\HtmlInputTextTag
      */
-    public $InputTag = NULL;
+    public $InputTag       = NULL;
 
     /**
      * Input for Date and time
-     * @param string $PartName 
+     * @param string $PartName
      */
-    function __construct($PartName, $InitialValue = NULL, $TagProperties = NULL) {
+    function __construct($PartName, $InitialValue = NULL, $TagProperties = NULL)
+    {
         $this->TagProperties = $TagProperties;
-        $this->InitialValue = $InitialValue;
+        $this->InitialValue  = $InitialValue;
         $this->setPartName($PartName);
         parent::__construct();
-        $this->EaseShared->webPage->IncludeJavaScript('js/jquery-ui-timepicker-addon.js', 3);
+        $this->EaseShared->webPage->IncludeJavaScript('js/jquery-ui-timepicker-addon.js',
+            3);
         $this->EaseShared->webPage->IncludeCss('css/jquery-ui-timepicker-addon.css');
-        $this->InputTag = new \Ease\HtmlInputTextTag($this->PartName, $this->InitialValue, $this->TagProperties);
+        $this->InputTag      = new \Ease\HtmlInputTextTag($this->PartName,
+            $this->InitialValue, $this->TagProperties);
         $this->InputTag->setTagID($this->PartName);
-        $this->InputTag = $this->addItem($this->InputTag);
-        if($InitialValue &&  (strtotime($InitialValue) < time( ))){
-            $this->InputTag->setTagCss(array('background-color'=>'red'));
+        $this->InputTag      = $this->addItem($this->InputTag);
+        if ($InitialValue && (strtotime($InitialValue) < time())) {
+            $this->InputTag->setTagCss(['background-color' => 'red']);
         }
     }
 
-    function Finalize() {
-        $this->EaseShared->webPage->addJavaScript('$(function() { $( "#' . $this->PartName . '" ).datetimepicker( { ' . $this->getPartPropertiesToString() . ' });});', 10);
+    function Finalize()
+    {
+        $this->EaseShared->webPage->addJavaScript('$(function() { $( "#'.$this->PartName.'" ).datetimepicker( { '.$this->getPartPropertiesToString().' });});',
+            10);
         parent::Finalize();
     }
- 
 }
-
 
 /**
  * Zobrazuje vstup pro heslo s měřičem síly opatřený patřičným popiskem
  */
-class LQLabeledDateTimeSelector extends EaseLabeledInput {
-
+class LQLabeledDateTimeSelector extends EaseLabeledInput
+{
     /**
      * Který input opatřit labelem ?
-     * @var string EaseInputClass name 
+     * @var string EaseInputClass name
      */
     public $ItemClass = 'LQDateTimeSelector';
 
 }
-
-
 ?>

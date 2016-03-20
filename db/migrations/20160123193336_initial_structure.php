@@ -9,7 +9,7 @@ class InitialStructure extends AbstractMigration
      */
     public function change()
     {
-        // Migration for table entries
+        // Migration for table entry
         $table = $this->table('entry');
         $table
             ->addColumn('domain', 'string', array('limit' => 25))

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * zobrazení a editace přehledu vložených adres
  * @copyright Vitex Software © 2012
@@ -19,47 +18,47 @@ require_once 'LQLinkDateTimeSelector.php';
  */
 class LQMyLinksEditor extends \Ease\HtmlDivTag
 {
-
     /**
-     * Pracujeme s tabulkou entries
-     * @var string 
+     * Pracujeme s tabulkou entry
+     * @var string
      */
-    public $MyTable = 'entries';
+    public $MyTable = 'entry';
 
     /**
      * Položky k zobrazení
-     * @var array 
+     * @var array
      */
-    public $Entries = array();
+    public $entry = [];
 
     /**
      * Kolik položek zobrazovat na stránku
-     * @var int unsigned 
+     * @var int unsigned
      */
-    public $EntriesPerPage = 20;
+    public $entryPerPage = 20;
 
     /**
      *
-     * @var type 
+     * @var type
      */
     public $Pages = 0;
 
     /**
-     * Načte data z databáze 
+     * Načte data z databáze
      */
-    function LoadSqlData( $Domain = NULL )
+    function LoadSqlData($Domain = NULL)
     {
-        if(is_null($Domain)){
+        if (is_null($Domain)) {
             $DomFragment = '';
         } else {
             $DomFragment = ' `domain` LIKE \''.$Domain.'\' AND ';
         }
         $PageNo = intval($this->webPage->getRequestValue('PageNo'));
-        $Pages = $this->MyDbLink->QueryToArray('SELECT count(*) FROM ' . $this->MyTable . ' WHERE deleted=0 AND '.$DomFragment.' `owner`=' . $this->EaseShared->User->getUserID());
+        $Pages  = $this->MyDbLink->QueryToArray('SELECT count(*) FROM '.$this->MyTable.' WHERE deleted=0 AND '.$DomFragment.' `owner`='.$this->EaseShared->User->getUserID());
         if (isset($Pages[0])) {
-            $this->Pages = ceil(current($Pages[0]) / $this->EntriesPerPage);
+            $this->Pages = ceil(current($Pages[0]) / $this->entryPerPage);
         }
-        $this->Entries = $this->MyDbLink->QueryToArray('SELECT * FROM ' . $this->MyTable . ' WHERE deleted=0 AND '.$DomFragment.' `owner`=' . $this->EaseShared->User->getUserID() . ' LIMIT ' . $this->EntriesPerPage . ' OFFSET ' . $PageNo * $this->EntriesPerPage, 'id');
+        $this->entry = $this->MyDbLink->QueryToArray('SELECT * FROM '.$this->MyTable.' WHERE deleted=0 AND '.$DomFragment.' `owner`='.$this->EaseShared->User->getUserID().' LIMIT '.$this->entryPerPage.' OFFSET '.$PageNo
+            * $this->entryPerPage, 'id');
     }
 
     /**
@@ -72,43 +71,47 @@ class LQMyLinksEditor extends \Ease\HtmlDivTag
         foreach ($Domains as $Domain) {
             $this->LoadSqlData($Domain);
             $TabTable = new \Ease\HtmlTableTag();
-            $TabTable->addRowHeaderColumns(array(_('zobr.'), _('od'), _('zkratka'), _('adresa'), _('Datum expirace'), _('odstranění')));
-            foreach ($this->Entries as $LinkID => $Link) {
-                $TabTable->addRowColumns(array(
+            $TabTable->addRowHeaderColumns([_('zobr.'), _('od'), _('zkratka'), _('adresa'),
+                _('Datum expirace'), _('odstranění')]);
+            foreach ($this->entry as $LinkID => $Link) {
+                $TabTable->addRowColumns([
                     $Link['used'],
                     self::ShowTime($Link['created']),
-                    new \Ease\HtmlATag( $Link['code'], $Link['code']),
+                    new \Ease\HtmlATag($Link['code'], $Link['code']),
                     new \Ease\HtmlATag($Link['url'], $Link['title']),
-                    new LQLinkDateTimeSelector('ExpireDate' . $Link['id'], $Link['ExpireDate'], $Link['id'], array('Field' => 'ExpireDate')),
-                    new EaseJQueryLinkButton('?DeleteID=' . $Link['id'], _('odstranit'), NULL, array('class' => 'delete')))
+                    new LQLinkDateTimeSelector('ExpireDate'.$Link['id'],
+                        $Link['ExpireDate'], $Link['id'],
+                        ['Field' => 'ExpireDate']),
+                    new EaseJQueryLinkButton('?DeleteID='.$Link['id'],
+                        _('odstranit'), NULL, ['class' => 'delete'])]
                 );
             }
             $this->addNavigation($TabTable);
             $DomTabs->addTab($Domain, $TabTable);
         }
-
     }
 
     /**
      * Přidává navigaci do tabulky
-     * 
-     * @param type $Table 
+     *
+     * @param type $Table
      */
-    function AddNavigation( & $Table )
+    function AddNavigation(& $Table)
     {
         if ($this->Pages > 1) {
-            $Navigator = array();
+            $Navigator = [];
             for ($i = 1; $i <= $this->Pages; $i++) {
-                $Navigator[] = '<a href="?PageNo=' . ($i - 1) . '">' . $i . '</a>';
+                $Navigator[] = '<a href="?PageNo='.($i - 1).'">'.$i.'</a>';
             }
-            $Table->addRowColumns(array(1 => implode(' ', $Navigator)), array('colspan' => 4));
+            $Table->addRowColumns([1 => implode(' ', $Navigator)],
+                ['colspan' => 4]);
         }
     }
 
     /**
      * Zobrazuje datum v národním tvaru
      * @param string $Time sql-time
-     * @return \Ease\HtmlSpanTag 
+     * @return \Ease\HtmlSpanTag
      */
     static function ShowTime($Time)
     {
@@ -116,7 +119,8 @@ class LQMyLinksEditor extends \Ease\HtmlDivTag
             return '';
         }
         $Stamp = strtotime($Time);
-        return new \Ease\HtmlSpanTag(NULL, strftime('%e.%m. %Y', $Stamp), array('title' => $Time));
+        return new \Ease\HtmlSpanTag(NULL, strftime('%e.%m. %Y', $Stamp),
+            ['title' => $Time]);
     }
 
     function SetUpUser(&$User, &$TargetObject = NULL)
@@ -124,7 +128,5 @@ class LQMyLinksEditor extends \Ease\HtmlDivTag
         $this->setDataValue('owner', $User->getUserID());
         return parent::SetUpUser($User, $TargetObject);
     }
-
 }
-
 ?>

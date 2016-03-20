@@ -1,5 +1,4 @@
 <?php
-
 /**
  * LinkQuick - Enter new addrese into database
  *
@@ -16,24 +15,32 @@ require_once 'includes/LQInit.php';
 
 $encoder = new Encoder();
 
-$ok = $oPage->getRequestValue('OK');
+$ok     = $oPage->getRequestValue('OK');
 $notify = $oPage->getRequestValue('Notify');
 $domain = $oPage->getRequestValue('Domain');
 $newURL = $oPage->getRequestValue('NewURL');
 if ($ok) {
-    if (strlen(trim($newURL)) && preg_match("/^(?:[;\/?:@&=+$,]|(?:[^\W_]|[-_.!~*#\()\[\] ])|(?:%[\da-fA-F]{2}))*$/", $newURL)) {
-        $encoder->setDataValue('ExpireDate', $oPage->getRequestValue('ExpireDate'));
+    if (strlen(trim($newURL)) && preg_match("/^(?:[;\/?:@&=+$,]|(?:[^\W_]|[-_.!~*#\()\[\] ])|(?:%[\da-fA-F]{2}))*$/",
+            $newURL)) {
+        $encoder->setDataValue('ExpireDate',
+            $oPage->getRequestValue('ExpireDate'));
         if ($encoder->saveUrl($newURL, $domain)) {
-            $oUser->addStatusMessage(_('Url was saved') . ': ' . $newURL, 'success');
+            $oUser->addStatusMessage(_('Url was saved').': '.$newURL, 'success');
             if ($notify) {
-                $mail = new EaseMail($notify, _('LinkQuick: You URL Shortcut'), $newURL . "\n = \n" . $encoder->getShortCutURL());
+                $mail = new EaseMail($notify, _('LinkQuick: You URL Shortcut'),
+                    $newURL."\n = \n".$encoder->getShortCutURL());
                 $mail->send();
             }
             $newURL = '';
-            $oPage->addItem(new EaseJQueryDialog('NewUrlSuccess', _('Zkratka byla vytvořena'), $encoder->getDataValue('title'), 'ui-icon-circle-check', new \Ease\HtmlATag($encoder->getCode(), 'http://' . LQEncoder::getDomain() . $encoder->getShortCutURL())));
+            $oPage->addItem(new EaseJQueryDialog('NewUrlSuccess',
+                _('Zkratka byla vytvořena'), $encoder->getDataValue('title'),
+                'ui-icon-circle-check',
+                new \Ease\HtmlATag($encoder->getCode(),
+                'http://'.LQEncoder::getDomain().$encoder->getShortCutURL())));
         }
     } else {
-        $oUser->addStatusMessage(_('This is not an web address!') . ': ' . $newURL, 'warning');
+        $oUser->addStatusMessage(_('This is not an web address!').': '.$newURL,
+            'warning');
     }
 }
 
@@ -55,8 +62,10 @@ $domainTabs = new \Ease\TWB\Tabs('DomainTabs');
 foreach ($domains as $domain) {
     $nextCode = Encoder::getNextCode($domain);
 
-    $addNewForm = new \Ease\TWB\Form('AddNewURL' . $domain);
-    $addNewForm->addInput(new \Ease\Html\InputTextTag('NewURL', $newURL, array('size' => 80, 'style' => 'font-size: 30px; height: 40px; width: 100%;')), _('URL to short')
+    $addNewForm = new \Ease\TWB\Form('AddNewURL'.$domain);
+    $addNewForm->addInput(new \Ease\Html\InputTextTag('NewURL', $newURL,
+        ['size' => 80, 'style' => 'font-size: 30px; height: 40px; width: 100%;']),
+        _('URL to short')
     );
 
     $mailTo = '';
@@ -66,13 +75,15 @@ foreach ($domains as $domain) {
 
 //    $AddNewFrame->addItem(new LQLabeledDateTimeSelector('ExpireDate'.  str_replace('/','_',$Domain), $OPage->getRequestValue('ExpireDate'), _('Datum expirace')));
 
-    $addNewForm->addInput(new \Ease\Html\InputTextTag('Notify', $mailTo), _('Send email confirmation to'),$notify);
+    $addNewForm->addInput(new \Ease\Html\InputTextTag('Notify', $mailTo),
+        _('Send email confirmation to'), $notify);
     $addNewForm->addItem(new \Ease\TWB\SubmitButton(_('OK')));
     $addNewForm->addItem(new \Ease\Html\InputHiddenTag('Domain', $domain));
 
-    $addNewFrame = new \Ease\TWB\Panel(_('New shortcut') . ' ' . $domain, 'success', $addNewForm);
+    $addNewFrame = new \Ease\TWB\Panel(_('New shortcut').' '.$domain, 'success',
+        $addNewForm);
 
-    $domainTabs->addTab($domain . $nextCode, $addNewFrame);
+    $domainTabs->addTab($domain.$nextCode, $addNewFrame);
 }
 
 $oPage->container->addItem($domainTabs);

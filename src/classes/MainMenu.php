@@ -1,4 +1,5 @@
 <?php
+
 namespace LQ;
 
 /**
@@ -7,7 +8,6 @@ namespace LQ;
  * @author Vitex <vitex@hippy.cz>
  * @copyright Vitex@hippy.cz (G) 2009,2010,2011,2012,2016
  */
-
 class MainMenu extends \Ease\Html\Div
 {
 
@@ -16,7 +16,7 @@ class MainMenu extends \Ease\Html\Div
      */
     function __construct()
     {
-        parent::__construct(null,['id'=>'MainMenu']);
+        parent::__construct(null, ['id' => 'MainMenu']);
     }
 
     /**
@@ -24,16 +24,19 @@ class MainMenu extends \Ease\Html\Div
      */
     function afterAdd()
     {
-        $nav = $this->addItem(new BootstrapMenu());
-        $user  = \Ease\Shared::user();
+        $nav    = $this->addItem(new BootstrapMenu());
+        $user   = \Ease\Shared::user();
         $userID = $user->getUserID();
-        
+
         if ($userID) {
             $icon = $user->getIcon();
             if ($icon) {
-                $nav->addMenuItem(new \Ease\Html\SpanTag('UserIcon', new \Ease\HtmlATag('settings.php', new \Ease\HtmlImgTag($icon, $user->getUserLogin(), 40, 40))));
+                $nav->addMenuItem(new \Ease\Html\SpanTag('UserIcon',
+                    new \Ease\Html\ATag('settings.php',
+                    new \Ease\Html\ImgTag($icon, $user->getUserLogin(), 40, 40))));
             } else {
-                $nav->addMenuItem(new \Ease\HtmlSpanTag('User', new \Ease\HtmlATag('settings.php', $user->getUserLogin())));
+                $nav->addMenuItem(new \Ease\Html\SpanTag('User',
+                    new \Ease\Html\ATag('settings.php', $user->getUserLogin())));
             }
         }
         $nav->addMenuItem(new \Ease\Html\ATag('index.php', _('Add new')));
@@ -42,10 +45,9 @@ class MainMenu extends \Ease\Html\Div
             $nav->addMenuItem(new \Ease\Html\ATag('logout.php', _('Sign out')));
         } else {
             $nav->addMenuItem(new \Ease\Html\ATag('login.php', _('Sign IN')));
-            $nav->addMenuItem(new \Ease\Html\ATag('createaccount.php', _('Create account')));
+            $nav->addMenuItem(new \Ease\Html\ATag('createaccount.php',
+                _('Create account')));
         }
-
-        $nav->addMenuItem(new \Ease\Html\ATag('doc/lqApiClient.phps', _('API')));
     }
 
     /**
@@ -53,10 +55,9 @@ class MainMenu extends \Ease\Html\Div
      */
     function finalize()
     {
-        $this->addJavaScript('$("#StatusMessages").click(function(){ $("#StatusMessages").fadeTo("slow",0.25).slideUp("slow"); });', 3, TRUE);
+        $this->addJavaScript('$("#StatusMessages").click(function(){ $("#StatusMessages").fadeTo("slow",0.25).slideUp("slow"); });',
+            3, TRUE);
         \Ease\JQuery\Part::jQueryze($this);
         $this->includeJavaScript('js/slideupmessages.js');
     }
-
 }
-
